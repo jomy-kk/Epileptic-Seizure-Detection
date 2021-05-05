@@ -1,7 +1,6 @@
 import numpy as np
 from scipy.signal import welch
 
-from feature_extraction.FeatureSequence import FeatureSequence
 from feature_extraction.HRVFeaturesCalculator import HRVFeaturesCalculator
 
 
@@ -10,13 +9,9 @@ class FrequencyFeaturesCalculator(HRVFeaturesCalculator):
     def __init__(self, nni_signal, sampling_frequency):
         super().__init__('linear', nni_signal)
         self.sf = sampling_frequency
-
-    # Labels
-    lf_label    = 'Low Frequency Power (LF)'
-    hf_label    = 'High Frequency Power (HF)'
-    lf_hf_label = 'LF/HF'
-    hf_lf_label = 'HF/LF'
-
+        # Labels
+        self.labels = {'lf': 'Low Frequency Power (LF)', 'hf': 'High Frequency Power (HF)',
+                       'lf_hf': 'LF/HF', 'hf_lf': 'HF/LF'}
 
     #@private
     def __spectral_density(self):
@@ -29,7 +24,7 @@ class FrequencyFeaturesCalculator(HRVFeaturesCalculator):
                 self.__spectral_density()
             low_freq_band = np.argwhere(self.frequency_dist < 0.15).reshape(-1)
             self.lf = np.sum(self.power_dist[low_freq_band]) / self.total_power
-        return FeatureSequence(self.lf, 'Low Frequency Power (LF)', {'cutoff': 0.15})
+        return self.lf
 
     def get_hf(self):
         if not hasattr(self, 'hf'):
@@ -37,10 +32,10 @@ class FrequencyFeaturesCalculator(HRVFeaturesCalculator):
                 self.__spectral_density()
             high_freq_band = np.argwhere(self.frequency_dist > 0.4).reshape(-1)
             self.hf = np.sum(self.power_dist[high_freq_band]) / self.total_power
-        return FeatureSequence(self.hf, 'High Frequency Power (HF)', {'cutoff': 0.4})
+        return self.hf
 
     def get_lf_hf(self):
-        return FeatureSequence(float(self.get_lf()) / float(self.get_hf()), 'LF/HF')
+        return self.get_lf() / self.get_hf()
 
     def get_hf_lf(self):
-        return FeatureSequence(float(self.get_hf()) / float(self.get_lf()), 'HF/LF')
+        return self.get_hf() / self.get_lf()

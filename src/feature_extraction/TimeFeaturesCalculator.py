@@ -1,6 +1,5 @@
 import numpy as np
 
-from feature_extraction.FeatureSequence import FeatureSequence
 from feature_extraction.HRVFeaturesCalculator import HRVFeaturesCalculator
 
 
@@ -8,17 +7,10 @@ class TimeFeaturesCalculator(HRVFeaturesCalculator):
     
     def __init__(self, nni_signal, sampling_frequency):
         super().__init__('linear', nni_signal)
-        
         self.sf = sampling_frequency
-    
-    # Labels
-    nn50_label  = 'NN50'
-    pnn50_label = 'PPN50'
-    sdnn_label  = 'Std Dev NNI'
-    rmssd_label = 'Root Mean Std Dev NNI'
-    mean_label  = 'Mean NNI'
-    var_label   = 'Variance NNI'
-    
+        # Labels
+        self.labels = {'nn50': 'NN50', 'pnn50': 'PPN50', 'sdnn': 'Std Dev NNI', 'rmssd': 'Root Mean Std Dev NNI',
+                       'mean': 'Mean NNI', 'var': 'Variance NNI'}
 
     def get_nn50(self):
         if not hasattr(self, 'nn50'):

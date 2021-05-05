@@ -1,7 +1,6 @@
 import math
 import numpy as np
 
-from feature_extraction.FeatureSequence import FeatureSequence
 from feature_extraction.HRVFeaturesCalculator import HRVFeaturesCalculator
 
 
@@ -13,6 +12,8 @@ class RQAFeaturesCalculator(HRVFeaturesCalculator):
     def __init__(self, nni_signal):
         super().__init__('non-linear', nni_signal)
         self.__rr()
+        # Labels
+        self.labels = {'rec': 'REC', 'det': 'Determinant', 'lmax': 'Maximum L'}
 
     # @private
     def __rr(self):
@@ -46,16 +47,16 @@ class RQAFeaturesCalculator(HRVFeaturesCalculator):
     def get_rec(self):
         if not hasattr(self, 'rec'):
             self.rec = self.__rr().sum() / (len(self.nni) ** 2)
-        return FeatureSequence(self.rec, 'REC')
+        return self.rec
 
     def get_det(self):
         if not hasattr(self, 'det'):
             self.det, self.lmax = self.__diag_det_lmax()
-        return FeatureSequence(self.det, 'Determinant')
+        return self.det
 
     def get_lmax(self):
         if not hasattr(self, 'lmax'):
             self.det, self.lmax = self.__diag_det_lmax()
-        return FeatureSequence(self.lmax, 'Maximum L')
+        return self.lmax
 
 
