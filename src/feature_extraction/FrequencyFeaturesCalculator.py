@@ -11,6 +11,12 @@ class FrequencyFeaturesCalculator(HRVFeaturesCalculator):
         super().__init__('linear', nni_signal)
         self.sf = sampling_frequency
 
+    # Labels
+    lf_label    = 'Low Frequency Power (LF)'
+    hf_label    = 'High Frequency Power (HF)'
+    lf_hf_label = 'LF/HF'
+    hf_lf_label = 'HF/LF'
+
 
     #@private
     def __spectral_density(self):
