@@ -73,10 +73,11 @@ def extract_hrv_features(nni_segment, sampling_frequency, _time=False, _frequenc
                                         features_calculator.get_lmax(),
                                         ))
 
+    del features_calculator
     return extracted_features
 
 
-@dispatch(np.array, int, needed_features=list)
+@dispatch(np.array, int, list)
 def extract_hrv_features(nni_segment, sampling_frequency, needed_features: list):
     """
     Method 2: Specify which features are needed. More inefficient.
@@ -120,5 +121,6 @@ def extract_hrv_features(nni_segment, sampling_frequency, needed_features: list)
     features_calculator = RQAFeaturesCalculator(nni_segment)
     extracted_features = np.hstack((extracted_features, __get_hrv_features(features_calculator, needed_features)))
 
+    del features_calculator
     return extracted_features
 
