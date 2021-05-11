@@ -144,10 +144,109 @@
           "state": "sleep"
         }
       ]
-    }
+    },
 
-
-
+    "105": {
+      "age": 52,
+      "start_date": "",
+      "end_date": "",
+      "crises": {
+        "1": {
+          "onset": "09/07/2019 07:26:55",
+          "location": ["F", "T"],
+          "side": "L",
+          "f/g": "FWIA",
+          "state": "sleep",
+          "left automatisms": true
+        }
+      },
+      "baselines": [
+        {
+          "start": "09/07/2019 0:0:0",
+          "end": "09/07/2019 6:0:0",
+          "state": "sleep"
+        },
+        {
+          "start": "10/07/2019 0:0:0",
+          "end": "10/07/2019 8:0:0",
+          "state": "sleep"
+        }
+      ]
+    },
+    
+     "106": {
+      "age": 36,
+      "start_date": "",
+      "end_date": "",
+      "crises": {
+        "2":
+        {
+          "onset": "30/07/2019 14:47:58",
+          "location": ["PO"],
+          "side": "L",
+          "type": "FWIA",
+          "state": "awake",
+        },
+        "3":
+        {
+          "onset": "30/07/2019 20:49:43",
+          "location": ["O"],
+          "side": "L",
+          "type": "FWIA",
+          "state": "awake",
+        },
+        "4":
+        {
+          "onset": "31/07/2019 09:13:27",
+          "location": ["PO"],
+          "side": "L",
+          "type": "FWIA",
+          "state": "awake",
+        },
+        "baselines": [
+        {
+          "start": "29/07/2019 16:0:0",
+          "end": "29/07/2019 22:0:0",
+          "state": "awake"
+        },
+        {
+          "start": "30/07/2019 9:0:0",
+          "end": "30/07/2019 13:0:0",
+          "state": "awake"
+        },
+        {
+          "start": "30/07/2019 16:0:0",
+          "end": "30/07/2019 19:0:0",
+          "state": "awake"
+        },
+        {
+          "start": "31/07/2019 11:0:0",
+          "end": "31/07/2019 18:0:0",
+          "state": "awake"
+        }
+      ]
+    },
+        "107": {
+      "age": 28,
+      "start_date": "27/08/2019",
+      "end_date": "30/08/2019",
+      "crises": {
+        "1":
+        {
+          "onset": "30/07/2019 14:47:58",
+          "location": ["PO"],
+          "side": "L",
+          "type": "FWIA",
+          "state": "awake",
+        },
+        "3":
+        {
+          "onset": "30/07/2019 20:49:43",
+          "location": ["O"],
+          "side": "L",
+          "type": "FWIA",
+          "state": "awake",
+        },
 
 
 
