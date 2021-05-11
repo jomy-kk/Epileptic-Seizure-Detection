@@ -7,10 +7,10 @@ with open(data_path + '/patients.json') as metadata_file:
     metadata = json.load(metadata_file)
 
 
-def assert_patient(patient): assert 101 <= patient <= 111, "Patient number should be between 101 and 111."
+def assert_patient(patient): assert 101 <= int(patient) <= 111, "Patient number should be between 101 and 111."
 
 
-def assert_crisis(crisis): assert crisis > 0, "Crisis must be a positive integer."
+def assert_crisis(crisis): assert int(crisis) > 0, "Crisis must be a positive integer."
 
 
 def assert_state(state): assert state == 'awake' or state == 'asleep', "State should be either 'awake' or 'asleep'."
@@ -21,7 +21,8 @@ def __get_patient_numbers():
 
 
 def __get_patient_crises_numbers(patient: int):
-    return metadata['patients'][str(patient)].keys()
+    assert_patient(patient)
+    return metadata['patients'][str(patient)]['crises'].keys()
 
 
 def __read_crisis_nni(patient: int, crisis: int):

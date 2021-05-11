@@ -46,6 +46,7 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _
                                         features_calculator.get_lf(),
                                         features_calculator.get_hf(),
                                         features_calculator.get_lf_hf(),
+                                        features_calculator.get_hf_lf(),
                                         ))
 
     if _pointecare:
@@ -240,17 +241,46 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None,
         crises = feature_extraction.io.__get_patient_crises_numbers(patient)
         features_set = {}
         for crisis in crises:
-            features_set[crisis] = __extract_crisis_hrv_features(patient, crisis)
+            # check if it already exists
+            features = feature_extraction.io.__read_crisis_hrv_features(patient, crisis)
+            if features is not None:
+                if input("An HRV features HDF5 file for this patient's crisis " + str(
+                        crisis) + " was found with the features " + str(
+                        list(features.columns)) + ".\nDiscard and recompute? y/n").lower() == 'y':
+                    print("Recomputing...")
+                    features_set[crisis] = __extract_crisis_hrv_features(patient, crisis)
+                else:
+                    print("Returning the features founded.")
+                    features_set[crisis] = features
+
         return features_set
 
     elif isinstance(crises, list) and len(crises) > 0:  # extract features for a specific crisis of the given patient
         features_set = {}
         for crisis in crises:
-            features_set[crisis] = __extract_crisis_hrv_features(patient, crisis)
+            # check if it already exists
+            features = feature_extraction.io.__read_crisis_hrv_features(patient, crisis)
+            if features is not None:
+                if input("An HRV features HDF5 file for this patient's crisis " + str(crisis) + " was found with the features " + str(
+                        list(features.columns)) + ".\nDiscard and recompute? y/n").lower() == 'y':
+                    print("Recomputing...")
+                    features_set[crisis] = __extract_crisis_hrv_features(patient, crisis)
+                else:
+                    print("Returning the features founded.")
+                    features_set[crisis] = features
+
         return features_set
 
     elif isinstance(crises, int):
-        return __extract_crisis_hrv_features(patient, crises)
+        # check if it already exists
+        features = feature_extraction.io.__read_crisis_hrv_features(patient, crises)
+        if features is not None:
+            if input("An HRV features HDF5 file for this patient/crisis was found with the features " + str(list(features.columns)) + ".\nDiscard and recompute? y/n").lower() == 'y':
+                print("Recomputing...")
+                return __extract_crisis_hrv_features(patient, crises)
+            else:
+                print("Returning the features founded.")
+                return features
 
     else:
         raise Exception("'crises' should be an integer (for 1 crisis extraction), a list of integers (for multiple "
