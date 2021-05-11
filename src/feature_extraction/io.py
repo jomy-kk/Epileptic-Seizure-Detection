@@ -28,9 +28,9 @@ def __read_crisis_nni(patient: int, crisis: int):
     assert_patient(patient)
     assert_crisis(crisis)
     try:
-        file_path = '/Patient' + str(patient) + '/nni_Crise ' + str(crisis) + '_hospital'
+        file_path = '/' + str(patient) + '/nni_crisis_' + str(crisis)
         data = pd.read_hdf(data_path + file_path)
-        print("Data from " + file_path + " was retreived.")
+        print("Data from " + file_path + " was retrieved.")
         return data
     except IOError:
         print("That patient/crisis pair does not exist. None was returned.")
@@ -41,7 +41,7 @@ def __save_crisis_hrv_features(patient: int, crisis: int, features: pd.DataFrame
     assert_patient(patient)
     assert_crisis(crisis)
     try:
-        file_path = '/Patient' + str(patient) + '/crisis' + str(crisis) + '_hrv_features'
+        file_path = '/' + str(patient) + '/hrv_crisis_' + str(crisis)
         features.to_hdf(data_path + file_path, 'features', mode='a')
         print("Written in " + file_path + " was successful.")
     except IOError:
@@ -52,10 +52,10 @@ def __read_crisis_hrv_features(patient: int, crisis: int):
     assert_patient(patient)
     assert_crisis(crisis)
     try:  # try to read a previously computed HDF containing the features
-        file_path = '/Patient' + str(patient) + '/crisis' + str(crisis) + '_hrv_features'
+        file_path = '/' + str(patient) + '/hrv_crisis_' + str(crisis)
         data = pd.read_hdf(data_path + file_path)
         print("Data from " + file_path + " was retrieved.")
         return data
-    except IOError:  # HDF not found, compute the features
+    except IOError:  # HDF not found, return None
         return None
 

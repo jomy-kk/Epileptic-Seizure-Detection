@@ -144,35 +144,9 @@
           "state": "sleep"
         }
       ]
-    },
-
-    "105": {
-      "age": 52,
-      "start_date": "",
-      "end_date": "",
-      "crises": {
-        "1": {
-          "onset": "09/07/2019 07:26:55",
-          "location": ["F", "T"],
-          "side": "L",
-          "f/g": "FWIA",
-          "state": "sleep",
-          "left automatisms": true
-        }
-      },
-      "baselines": [
-        {
-          "start": "09/07/2019 0:0:0",
-          "end": "09/07/2019 6:0:0",
-          "state": "sleep"
-        },
-        {
-          "start": "10/07/2019 0:0:0",
-          "end": "10/07/2019 8:0:0",
-          "state": "sleep"
-        }
-      ]
     }
+
+
 
 
 
