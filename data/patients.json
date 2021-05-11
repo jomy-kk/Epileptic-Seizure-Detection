@@ -184,21 +184,3 @@
   }
 }
 
-
-
-
-{
-          "onset": "dd/mm/aaaa hh:mm:ss",
-          "location": ["l1", "l2", ... ],
-          "side": "L/R",
-          "type": "x",
-          "state": "awake/sleep"
-        }
-
-
-FT = fronto-temporal
-CP = centro-parietal
-
-FWIA = Focal with impaired awareness sz
-FBTC = Focal to bilateral tonic clonic sz
-E    = Electricographic (crise elétrica)
