@@ -25,7 +25,7 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _
     :param _rqa: Pass as True to compute all recurrent quantitative analysis features.
     :return extracted_features: An np.hstack with all the requested features.
     """
-    extracted_features = np.hstack(())
+    extracted_features = []
 
     if _time:
         from feature_extraction.TimeFeaturesCalculator import TimeFeaturesCalculator
@@ -107,7 +107,7 @@ def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_fe
         return features, labels
 
     # Main segment
-    extracted_features = np.hstack(())
+    extracted_features = []
     labels = []
 
     features_calculator = TimeFeaturesCalculator(nni_segment, sampling_frequency)
@@ -179,7 +179,7 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None,
     individual features specified in needed_features.
     """
 
-    sf = io.metadata['sampling_frequency']  # Hz
+    sf = feature_extraction.io.metadata['sampling_frequency']  # Hz
     n_samples_segment = segment_time * sf
 
     # Get labels for the features
@@ -196,15 +196,16 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None,
     if _rqa:
         labels += list(RQAFeaturesCalculator.labels.values())
     # individual features
-    for f in needed_features:
-        if f in labels:  # if this feature was already part of a group, it was already extracted
-            needed_features.remove(f)  # remove to prevent duplicates
-        else:
-            labels.append(f)
+    if needed_features is not None:
+        for f in needed_features:
+            if f in labels:  # if this feature was already part of a group, it was already extracted
+                needed_features.remove(f)  # remove to prevent duplicates
+            else:
+                labels.append(f)
 
     # Auxiliary procedure
     def __extract_crisis_hrv_features(patient, crisis):
-        nni_signal = io.__read_crisis_nni(patient, crisis)
+        nni_signal = feature_extraction.io.__read_crisis_nni(patient, crisis)
         segmented_nni, segmented_date_time = segment_nni_signal(nni_signal, n_samples_segment)
         features = pd.DataFrame(columns=labels)
 
@@ -217,15 +218,16 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None,
                                                               _katz=_katz, _rqa=_rqa)
 
             # individual features
-            extracted_features = np.hstack(
-                (extracted_features, extract_segment_some_hrv_features(segment, sf, needed_features)))
+            if needed_features is not None:
+                extracted_features = np.hstack(
+                    (extracted_features, extract_segment_some_hrv_features(segment, sf, needed_features)))
 
             features.loc[i] = extracted_features  # add a line
             t = segment_times[0] + ((segment_times[-1] - segment_times[0]) / 2)  # time in the middle of the segment
             features = features.rename({i: t}, axis='index')
 
         if _save:
-            io.__save_crisis_hrv_features(patient, crisis, features)
+            feature_extraction.io.__save_crisis_hrv_features(patient, crisis, features)
 
         return features
 
@@ -235,7 +237,7 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None,
                 patient) + ". Are you sure? y/n").lower() == 'n':
             return
         # extract features for all crisis of the given patient
-        crises = io.__get_patient_crises_numbers(patient)
+        crises = feature_extraction.io.__get_patient_crises_numbers(patient)
         features_set = {}
         for crisis in crises:
             features_set[crisis] = __extract_crisis_hrv_features(patient, crisis)
@@ -264,7 +266,7 @@ def extract_hrv_features_all_patients(n_samples_segment: int, _save=True):
     dictionary with one element for each crisis of that patient, identified by the crisis number. Each of these elements
     are a pd.Dataframe containing the extracted features in each column by segments in rows.
     """
-    all_patient_numbers = io.__get_patient_numbers()
+    all_patient_numbers = feature_extraction.io.__get_patient_numbers()
     patients_set = {}
     for patient in all_patient_numbers:
         patients_set[patient] = extract_patient_hrv_features(n_samples_segment, patient, None, _save=_save)
@@ -279,7 +281,7 @@ def get_patient_hrv_features(patient: int, crisis: int):
     :param crisis: Integer number of the crisis of the patient.
     :return:
     """
-    features = io.__read_crisis_hrv_features(patient, crisis)
+    features = feature_extraction.io.__read_crisis_hrv_features(patient, crisis)
 
     if features is None:  # HDF not found, compute the features
         if input(
