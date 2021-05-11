@@ -140,16 +140,16 @@ def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_fe
     return extracted_features
 
 
-def segment_nni_signal(nni_signal, n_samples_segment):
-    n_segments = int(len(nni_signal) / n_samples_segment)
-    segmented_nni = np.array_split(nni_signal['nni'], n_segments)
+def segment_nni_signal(nni_signal, n_samples_segment, n_samples_overlap=0):
     date_time_indexes = list(nni_signal['nni'].keys())
-    segmented_date_time = np.array_split(date_time_indexes, n_segments)
-
+    step = n_samples_segment - n_samples_overlap
+    segmented_nni = [nni_signal[i: i + n_samples_segment] for i in range(0, len(nni_signal), step)]
+    segmented_date_time = [date_time_indexes[i: i + n_samples_segment] for i in range(0, len(date_time_indexes), step)]
+    print("Divided signal into " + str(len(segmented_nni)) + " samples.")
     return segmented_nni, segmented_date_time
 
 
-def extract_patient_hrv_features(segment_time: int, patient: int, crises=None,
+def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, segment_overlap_time=0,
                                  _time=False, _frequency=False, _pointecare=False, _katz=False, _rqa=False,
                                  needed_features: list = None,
                                  _save=True):
@@ -182,6 +182,7 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None,
 
     sf = feature_extraction.io.metadata['sampling_frequency']  # Hz
     n_samples_segment = segment_time * sf
+    n_samples_overlap = segment_overlap_time * sf
 
     # Get labels for the features
     labels = []
@@ -207,7 +208,7 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None,
     # Auxiliary procedure
     def __extract_crisis_hrv_features(patient, crisis):
         nni_signal = feature_extraction.io.__read_crisis_nni(patient, crisis)
-        segmented_nni, segmented_date_time = segment_nni_signal(nni_signal, n_samples_segment)
+        segmented_nni, segmented_date_time = segment_nni_signal(nni_signal, n_samples_segment, n_samples_overlap=n_samples_overlap)
         features = pd.DataFrame(columns=labels)
 
         # complete group features
