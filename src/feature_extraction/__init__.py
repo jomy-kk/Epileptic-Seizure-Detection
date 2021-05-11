@@ -10,7 +10,7 @@ from feature_extraction.KatzFeaturesCalculator import KatzFeaturesCalculator
 from feature_extraction.PointecareFeaturesCalculator import PointecareFeaturesCalculator
 from feature_extraction.RQAFeaturesCalculator import RQAFeaturesCalculator
 from feature_extraction.TimeFeaturesCalculator import TimeFeaturesCalculator
-
+import feature_extraction.io
 
 data_path = 'data'
 
@@ -150,28 +150,6 @@ def segment_nni_signal(nni_signal, n_samples_segment):
     return segmented_nni, segmented_date_time
 
 
-def __read_crisis_nni(patient: int, crisis: int):
-    assert_patient(patient)
-    assert_crisis(crisis)
-    try:
-        file_path = '/Patient' + str(patient) + '/nni_Crise ' + str(crisis) + '_hospital'
-        data = pd.read_hdf(data_path + file_path)
-        print("Data from " + file_path + " was retreived.")
-        return data
-    except IOError:
-        print("That patient/crisis pair does not exist. None was returned.")
-        return None
-
-
-def __save_crisis_hrv_features(patient: int, crisis: int, features: pd.DataFrame):
-    assert_patient(patient)
-    assert_crisis(crisis)
-    try:
-        file_path = '/Patient' + str(patient) + '/crisis' + str(crisis) + '_hrv_features'
-        features.to_hdf(data_path + file_path, 'features', mode='a')
-        print("Written in " + file_path + " was successful.")
-    except IOError:
-        print("That patient/crisis pair cannot be created. Save failed.")
 
 
 def extract_patient_hrv_features(n_samples_segment: int, patient: int, crises=None,
@@ -210,7 +188,7 @@ def extract_patient_hrv_features(n_samples_segment: int, patient: int, crises=No
     segment_samples = segment_time * sf  # 64 samples
 
     def __extract_crisis_hrv_features(patient, crisis):  # TODO: Union with needed_features
-        nni_signal = __read_crisis_nni(patient, crisis)
+        nni_signal = io.__read_crisis_nni(patient, crisis)
         segmented_nni, segmented_date_time = segment_nni_signal(nni_signal, n_samples_segment)
         features = pd.DataFrame(columns=columns)
         for i, segment, segment_times in zip(range(len(segmented_nni)), segmented_nni,
@@ -221,7 +199,7 @@ def extract_patient_hrv_features(n_samples_segment: int, patient: int, crises=No
             t = segment_times[0] + ((segment_times[-1] - segment_times[0]) / 2)  # time in the middle of the segment
             features = features.rename({i: t}, axis='index')
         if _save:
-            __save_crisis_hrv_features(patient, crisis, features)
+            io.__save_crisis_hrv_features(patient, crisis, features)
         return features
 
     if crises is None:
@@ -229,7 +207,7 @@ def extract_patient_hrv_features(n_samples_segment: int, patient: int, crises=No
                 patient) + ". Are you sure? y/n").lower() == 'n':
             return
         # extract features for all crisis of the given patient
-        crises = get_patient_crises_numbers(patient)
+        crises = io.__get_patient_crises_numbers(patient)
         features_set = {}
         for crisis in crises:
             features_set[crisis] = __extract_crisis_hrv_features(patient, crisis)
@@ -258,7 +236,7 @@ def extract_hrv_features_all_patients(n_samples_segment: int, _save=True):
     dictionary with one element for each crisis of that patient, identified by the crisis number. Each of these elements
     are a pd.Dataframe containing the extracted features in each column by segments in rows.
     """
-    all_patient_numbers = __get_patient_numbers()
+    all_patient_numbers = io.__get_patient_numbers()
     patients_set = {}
     for patient in all_patient_numbers:
         patients_set[patient] = extract_patient_hrv_features(n_samples_segment, patient, None, _save=_save)
@@ -299,7 +277,4 @@ def get_patient_hrv_features(patient: int, crisis: int):
             return None
 
 
-def __get_patient_numbers():
-    directories = [name for name in os.listdir(data_path) if name[0] != '.']
-    return [name.split('Patient')[1] for name in directories]
 
