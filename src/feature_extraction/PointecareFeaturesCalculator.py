@@ -8,8 +8,9 @@ class PointecareFeaturesCalculator(HRVFeaturesCalculator):
 
     def __init__(self, nni_signal):
         super().__init__('non-linear', nni_signal)
-        # Labels
-        self.labels = {'sd1': 'SD1', 'sd2': 'SD2', 'csi': 'CSI (SD2/SD1)', 'csv': 'CSV'}
+
+    # Labels
+    labels = {'sd1': 'SD1', 'sd2': 'SD2', 'csi': 'CSI (SD2/SD1)', 'csv': 'CSV'}
 
     def get_sd1(self):
         if not hasattr(self, 'sd1'):

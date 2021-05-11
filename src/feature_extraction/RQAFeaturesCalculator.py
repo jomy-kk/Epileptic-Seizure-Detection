@@ -12,8 +12,9 @@ class RQAFeaturesCalculator(HRVFeaturesCalculator):
     def __init__(self, nni_signal):
         super().__init__('non-linear', nni_signal)
         self.__rr()
-        # Labels
-        self.labels = {'rec': 'REC', 'det': 'Determinant', 'lmax': 'Maximum L'}
+
+    # Labels
+    labels = {'rec': 'REC', 'det': 'Determinant', 'lmax': 'Maximum L'}
 
     # @private
     def __rr(self):

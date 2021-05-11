@@ -1,8 +1,5 @@
-import os
-
 import numpy as np
 import pandas as pd
-from multipledispatch import dispatch
 
 from feature_extraction.FrequencyFeaturesCalculator import FrequencyFeaturesCalculator
 from feature_extraction.HRVFeaturesCalculator import HRVFeaturesCalculator
@@ -12,19 +9,7 @@ from feature_extraction.RQAFeaturesCalculator import RQAFeaturesCalculator
 from feature_extraction.TimeFeaturesCalculator import TimeFeaturesCalculator
 import feature_extraction.io
 
-data_path = 'data'
 
-
-def assert_patient(patient): assert patient >= 101 and patient <= 111, "Patient number should be between 101 and 111."
-
-
-def assert_crisis(crisis): assert crisis > 0, "Crisis must be a positive integer."
-
-
-def assert_state(state): assert state == 'awake' or state == 'asleep', "State should be either 'awake' or 'asleep'."
-
-
-#@dispatch(np.array, int, _time=bool, _frequency=bool, _pointecare=bool, _katz=bool, _rqa=bool)
 def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _frequency=False, _pointecare=False,
                                  _katz=False,
                                  _rqa=False):
@@ -93,8 +78,7 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _
     return extracted_features
 
 
-#@dispatch(np.array, int, list)
-def extract_segment_hrv_features(nni_segment, sampling_frequency, needed_features: list):
+def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_features: list):
     """
     Method 2: Specify which features are needed. More inefficient.
     Given an nni segment and its sampling frequency, extracts and returns the requested needed features.
@@ -114,28 +98,42 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, needed_feature
         :return: A list of the requested feature values.
         """
         features = []
+        labels = []
         for needed_feature in needed_features:
             assert isinstance(needed_feature, str)
-            assert hasattr(calculator, 'get_' + needed_feature)
-            features.append(getattr(calculator, 'get_' + needed_feature)())
-        return features
+            if hasattr(calculator, 'get_' + needed_feature):
+                features.append(getattr(calculator, 'get_' + needed_feature)())
+                labels.append(calculator.labels[needed_feature])
+        return features, labels
 
+    # Main segment
     extracted_features = np.hstack(())
+    labels = []
 
     features_calculator = TimeFeaturesCalculator(nni_segment, sampling_frequency)
-    extracted_features = np.hstack((extracted_features, __get_hrv_features(features_calculator, needed_features)))
+    f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
+    extracted_features = np.hstack((extracted_features, f))
+    labels += l
 
     features_calculator = FrequencyFeaturesCalculator(nni_segment, sampling_frequency)
-    extracted_features = np.hstack((extracted_features, __get_hrv_features(features_calculator, needed_features)))
+    f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
+    extracted_features = np.hstack((extracted_features, f))
+    labels += l
 
     features_calculator = PointecareFeaturesCalculator(nni_segment)
-    extracted_features = np.hstack((extracted_features, __get_hrv_features(features_calculator, needed_features)))
+    f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
+    extracted_features = np.hstack((extracted_features, f))
+    labels += l
 
     features_calculator = KatzFeaturesCalculator(nni_segment)
-    extracted_features = np.hstack((extracted_features, __get_hrv_features(features_calculator, needed_features)))
+    f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
+    extracted_features = np.hstack((extracted_features, f))
+    labels += l
 
     features_calculator = RQAFeaturesCalculator(nni_segment)
-    extracted_features = np.hstack((extracted_features, __get_hrv_features(features_calculator, needed_features)))
+    f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
+    extracted_features = np.hstack((extracted_features, f))
+    labels += l
 
     del features_calculator
     return extracted_features
@@ -150,16 +148,14 @@ def segment_nni_signal(nni_signal, n_samples_segment):
     return segmented_nni, segmented_date_time
 
 
-
-
-def extract_patient_hrv_features(n_samples_segment: int, patient: int, crises=None,
+def extract_patient_hrv_features(segment_time: int, patient: int, crises=None,
                                  _time=False, _frequency=False, _pointecare=False, _katz=False, _rqa=False,
                                  needed_features: list = None,
                                  _save=True):
     """
     Extracts features of some or all crises of a given patient.
 
-    :param n_samples_segment: Integer number of seconds for each segment.
+    :param segment_time: Integer number of seconds for each segment.
     :param patient: Integer number of the patient.
     :param crises: Integer number of the crisis of the patient, or
                     a list of integers of multiple crises of the patient, or
@@ -183,25 +179,57 @@ def extract_patient_hrv_features(n_samples_segment: int, patient: int, crises=No
     individual features specified in needed_features.
     """
 
-    segment_time = 16  # seconds
-    sf = 4  # Hz
-    segment_samples = segment_time * sf  # 64 samples
+    sf = io.metadata['sampling_frequency']  # Hz
+    n_samples_segment = segment_time * sf
 
-    def __extract_crisis_hrv_features(patient, crisis):  # TODO: Union with needed_features
+    # Get labels for the features
+    labels = []
+    # groups
+    if _time:
+        labels += list(TimeFeaturesCalculator.labels.values())
+    if _frequency:
+        labels += list(FrequencyFeaturesCalculator.labels.values())
+    if _pointecare:
+        labels += list(PointecareFeaturesCalculator.labels.values())
+    if _katz:
+        labels += list(KatzFeaturesCalculator.labels.values())
+    if _rqa:
+        labels += list(RQAFeaturesCalculator.labels.values())
+    # individual features
+    for f in needed_features:
+        if f in labels:  # if this feature was already part of a group, it was already extracted
+            needed_features.remove(f)  # remove to prevent duplicates
+        else:
+            labels.append(f)
+
+    # Auxiliary procedure
+    def __extract_crisis_hrv_features(patient, crisis):
         nni_signal = io.__read_crisis_nni(patient, crisis)
         segmented_nni, segmented_date_time = segment_nni_signal(nni_signal, n_samples_segment)
-        features = pd.DataFrame(columns=columns)
+        features = pd.DataFrame(columns=labels)
+
+        # complete group features
         for i, segment, segment_times in zip(range(len(segmented_nni)), segmented_nni,
                                              segmented_date_time):
-            feat = extract_segment_hrv_features(segment, _time=_time, _frequency=_frequency, _pointecare=_pointecare,
-                                                _katz=_katz, _rqa=_rqa)
-            features.loc[i] = feat  # add a line
+            # group features
+            extracted_features = extract_segment_hrv_features(segment, sf, _time=_time, _frequency=_frequency,
+                                                              _pointecare=_pointecare,
+                                                              _katz=_katz, _rqa=_rqa)
+
+            # individual features
+            extracted_features = np.hstack(
+                (extracted_features, extract_segment_some_hrv_features(segment, sf, needed_features)))
+
+            features.loc[i] = extracted_features  # add a line
             t = segment_times[0] + ((segment_times[-1] - segment_times[0]) / 2)  # time in the middle of the segment
             features = features.rename({i: t}, axis='index')
+
         if _save:
             io.__save_crisis_hrv_features(patient, crisis, features)
+
         return features
 
+    # Main segment
     if crises is None:
         if input("You are about to extract features from all crisis of patient " + str(
                 patient) + ". Are you sure? y/n").lower() == 'n':
@@ -251,16 +279,12 @@ def get_patient_hrv_features(patient: int, crisis: int):
     :param crisis: Integer number of the crisis of the patient.
     :return:
     """
-    assert_patient(patient)
-    assert_crisis(crisis)
-    try:  # try to read a previously computed HDF containing the features
-        file_path = '/Patient' + str(patient) + '/crisis' + str(crisis) + '_hrv_features'
-        data = pd.read_hdf(data_path + file_path)
-        print("Data from " + file_path + " was retrieved.")
-        return data
-    except IOError:  # HDF not found, compute the features
-        if input("The HRV features for this patient/crisis pair were never computed before. Would you like to compute them now? y/n").lower() == 'y':
-            n_samples_segment = input("Number of samples per segment = ")
+    features = io.__read_crisis_hrv_features(patient, crisis)
+
+    if features is None:  # HDF not found, compute the features
+        if input(
+                "The HRV features for this patient/crisis pair were never computed before. Would you like to compute them now? y/n").lower() == 'y':
+            segment_seconds = input("Seconds per segment = ")
             needed_features = input("Which features to compute (separated by spaces, or 'all') = ")
             if needed_features == 'all':
                 needed_features = None
@@ -268,13 +292,12 @@ def get_patient_hrv_features(patient: int, crisis: int):
                 needed_features = needed_features.split(sep=' ')
 
             print("Extracting features...")
-            features = extract_patient_hrv_features(int(n_samples_segment), patient, crisis,
-                                         needed_features=needed_features, _save=True)
+            features = extract_patient_hrv_features(int(segment_seconds), patient, crisis,
+                                                    needed_features=needed_features, _save=True)
             print("Feature extraction saved.")
             return features
 
         else:
             return None
-
-
-
+    else:
+        return features

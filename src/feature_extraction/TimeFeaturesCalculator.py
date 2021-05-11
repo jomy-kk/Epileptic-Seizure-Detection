@@ -8,9 +8,10 @@ class TimeFeaturesCalculator(HRVFeaturesCalculator):
     def __init__(self, nni_signal, sampling_frequency):
         super().__init__('linear', nni_signal)
         self.sf = sampling_frequency
-        # Labels
-        self.labels = {'nn50': 'NN50', 'pnn50': 'PPN50', 'sdnn': 'Std Dev NNI', 'rmssd': 'Root Mean Std Dev NNI',
-                       'mean': 'Mean NNI', 'var': 'Variance NNI'}
+
+    # Labels
+    labels = {'nn50': 'NN50', 'pnn50': 'PPN50', 'sdnn': 'Std Dev NNI', 'rmssd': 'Root Mean Std Dev NNI',
+                   'mean': 'Mean NNI', 'var': 'Variance NNI'}
 
     def get_nn50(self):
         if not hasattr(self, 'nn50'):

@@ -9,8 +9,9 @@ class FrequencyFeaturesCalculator(HRVFeaturesCalculator):
     def __init__(self, nni_signal, sampling_frequency):
         super().__init__('linear', nni_signal)
         self.sf = sampling_frequency
-        # Labels
-        self.labels = {'lf': 'Low Frequency Power (LF)', 'hf': 'High Frequency Power (HF)',
+
+    # Labels
+    labels = {'lf': 'Low Frequency Power (LF)', 'hf': 'High Frequency Power (HF)',
                        'lf_hf': 'LF/HF', 'hf_lf': 'HF/LF'}
 
     #@private

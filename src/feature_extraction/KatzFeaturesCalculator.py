@@ -11,8 +11,9 @@ class KatzFeaturesCalculator(HRVFeaturesCalculator):
 
     def __init__(self, nni_signal):
         super().__init__('non-linear', nni_signal)
-        # Labels
-        self.labels = {'katz_fractal_dim': 'Katz fractal dimension'}
+
+    # Labels
+    labels = {'katz_fractal_dim': 'Katz fractal dimension'}
 
     def get_katz_fractal_dim(self):
         if not hasattr(self, 'katz_fractal_dim'):
