@@ -161,54 +161,48 @@
           "f/g": "F",
           "state": "sleep",
           "simple focal": true
-        }
-      },
-      "1": {
+        },
+        "1": {
           "onset": "10/04/2019 20:05:03",
           "location": ["F", "T", "CP"],
           "side": "B",
           "f/g": "FBTC",
           "state": "awake",
           "generalized tonic-clonic": true
-        }
-      },
-      "2": {
+        },
+        "2": {
           "onset": "11/04/2019 06:48:33",
           "location": ["T"],
           "side": "E",
           "f/g": "FWIA",
           "state": "awake",
           "bimanual automatisms": true
-        }
-      },
-      "3": {
+        },
+        "3": {
           "onset": "11/04/2019 09:16:47",
           "location": ["F", "FC", "T"],
           "side": "E",
           "f/g": "FWIA",
           "state": "awake",
           "bimanual automatisms": true
-        }
-      },
-      "4": {
+        },
+        "4": {
           "onset": "11/04/2019 10:20:04",
           "location": ["F", "FC"],
           "side": "B",
           "f/g": "FWIA",
           "state": "awake",
           "bimanual automatisms": true
-        }
-      },
-      "5": {
+        },
+        "5": {
           "onset": "11/04/2019 10:48:33",
           "location": ["F", "FC", "T"],
           "side": "E",
           "f/g": "FWIA",
           "state": "awake",
           "bimanual automatisms": true
-        }
-      },
-      "6": {
+        },
+        "6": {
           "onset": "12/04/2019 13:21:00",
           "location": ["T"],
           "side": "E",
@@ -274,13 +268,12 @@
       ]
     },
     
-     "106": {
+    "106": {
       "age": 36,
       "start_date": "",
       "end_date": "",
       "crises": {
-        "2":
-        {
+        "2": {
           "onset": "30/07/2019 14:47:58",
           "location": ["PO"],
           "side": "L",
@@ -288,8 +281,7 @@
           "state": "awake",
           "bimanual automatisms": true
         },
-        "3":
-        {
+        "3": {
           "onset": "30/07/2019 20:49:43",
           "location": ["O"],
           "side": "L",
@@ -297,15 +289,15 @@
           "state": "awake",
           "bimanual automatisms": true
         },
-        "4":
-        {
+        "4": {
           "onset": "31/07/2019 09:13:27",
           "location": ["PO"],
           "side": "L",
           "type": "FWIA",
           "state": "awake"
-        },
-        "baselines": [
+        }
+      },
+      "baselines": [
         {
           "start": "29/07/2019 16:00:00",
           "end": "29/07/2019 22:00:00",
@@ -329,13 +321,12 @@
       ]
     },
        
-        "107": {
+    "107": {
       "age": 28,
       "start_date": "27/08/2019",
       "end_date": "30/08/2019",
       "crises": {
-        "1":
-        {
+        "1": {
           "onset": "26/08/2019 16:04:25",
           "location": ["F"],
           "side": "R",
@@ -343,8 +334,7 @@
           "state": "sleep",
           "myoclonic": true
         },
-        "2":
-        {
+        "2": {
          "onset": "26/08/2019 16:07:12",
           "location": ["T"],
           "side": "R",
@@ -352,8 +342,7 @@
           "state": "sleep",
           "myoclonic": true
         },
-        "3":
-        {
+        "3": {
          "onset": "26/08/2019 16:27:34",
           "location": ["T"],
           "side": "R",
@@ -361,8 +350,7 @@
           "state": "sleep",
           "myoclonic": true
         },
-        "4":
-        {
+        "4": {
          "onset": "26/08/2019 16:30:00",
           "location": ["T"],
           "side": "R",
@@ -370,8 +358,7 @@
           "state": "sleep",
           "myoclonic": true
         },
-        "5":
-        {
+        "5": {
          "onset": "26/08/2019 16:33:53",
           "location": ["T"],
           "side": "R",
@@ -379,8 +366,7 @@
           "state": "sleep",
           "myoclonic": true
         },
-        "6":
-        {
+        "6": {
          "onset": "26/08/2019 2:53:32",
           "location": ["F","T", "C"],
           "side": "B",
@@ -388,8 +374,7 @@
           "state": "sleep",
           "myoclonic": true
         },
-        "7":
-        {
+        "7": {
          "onset": "30/08/2019 1:00:27",
           "location": ["F"],
           "side": "B",
@@ -397,8 +382,7 @@
           "state": "sleep",
           "myoclonic": true
         },
-        "8":
-        {
+        "8": {
          "onset": "30/08/2019 1:03:58",
           "location": ["T"],
           "side": "R",
@@ -406,303 +390,267 @@
           "state": "sleep",
           "myoclonic": true
         },
-        "9":
-        {
+        "9": {
          "onset": "27/08/2019 23:32:08",
           "location": ["T"],
           "side": "B",
           "type": "FUNK",
           "state": "sleep"
         },
-         "10":
-        {
+         "10": {
          "onset": "27/08/2019 23:35:38",
           "location": ["F"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "11":
-        {
+        "11": {
          "onset": "27/08/2019 23:36:36",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "12":
-        {
+        "12": {
          "onset": "27/08/2019 23:37:26",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "13":
-        {
+        "13": {
          "onset": "27/08/2019 23:39:11",
           "location": ["T"],
           "side": "B",
           "type": "E",
           "state": "sleep"
         },
-         "14":
-        {
+         "14": {
          "onset": "27/08/2019 23:40:01",
           "location": ["C"],
           "side": "R",
           "type": "E",
           "state": "FUNK"
         },
-         "15":
-        {
+         "15": {
          "onset": "27/08/2019 23:40:35",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "16":
-        {
+        "16": {
          "onset": "27/08/2019 23:41:30",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "17":
-        {
+        "17": {
          "onset": "27/08/2019 23:41:58",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "18":
-        {
+        "18": {
          "onset": "27/08/2019 23:42:59",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "19":
-        {
+        "19": {
          "onset": "27/08/2019 23:43:35",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "20":
-        {
+        "20": {
          "onset": "27/08/2019 23:44:11",
           "location": ["T"],
           "side": "R",
           "type": "FUNK",
           "state": "sleep"
         },
-         "21":
-        {
+         "21": {
          "onset": "27/08/2019 23:46:39",
           "location": ["P", "C"],
           "side": "R",
           "type": "FUNK",
           "state": "sleep"
         },
-         "22":
-        {
+         "22": {
          "onset": "27/08/2019 23:47:10",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-         "24":
-        {
+         "24": {
          "onset": "27/08/2019 23:48:59",
           "location": ["C", "P"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-         "25":
-        {
+         "25": {
          "onset": "27/08/2019 23:49:27",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-         "26":
-        {
+         "26": {
          "onset": "27/08/2019 23:50:17",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-         "27":
-        {
+         "27": {
          "onset": "27/08/2019 23:52:24",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-         "28":
-        {
+         "28": {
          "onset": "27/08/2019 23:53:08",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-         "29":
-        {
+         "29": {
          "onset": "28/08/2019 00:00:04",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "31":
-        {
+        "31": {
          "onset": "28/08/2019 00:01:07",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "32":
-        {
+        "32": {
          "onset": "28/08/2019 00:17:35",
           "location": ["F","T"],
           "side": "B",
           "type": "",
           "state": "sleep"
         },
-        "33":
-        {
+        "33": {
          "onset": "28/08/2019 00:26:00",
           "location": ["F","T"],
           "side": "B",
           "type": "E",
           "state": "sleep"
         },
-        "34":
-        {
+        "34": {
          "onset": "28/08/2019 01:38:11",
           "location": ["T"],
           "side": "R",
           "type": "",
           "state": "sleep"
         },
-         "35":
-        {
+         "35": {
          "onset": "28/08/2019 10:25:00",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-         "38":
-        {
+         "38": {
          "onset": "28/08/2019 22:02:55",
           "location": ["T"],
           "side": "R",
           "type": "FUNK",
           "state": "sleep"
         },
-         "39":
-        {
+         "39": {
          "onset": "28/08/2019 22:40:00",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-         "40":
-        {
+         "40": {
          "onset": "28/08/2019 23:42:01",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "41":
-        {
+        "41": {
          "onset": "28/08/2019 23:44:31",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "42":
-        {
+        "42": {
          "onset": "28/08/2019 23:52:03",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "43":
-        {
+        "43": {
          "onset": "29/08/2019 00:00:14",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-         "45":
-        {
+         "45": {
          "onset": "29/08/2019 02:21:11",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-         "46":
-        {
+         "46": {
          "onset": "29/08/2019 02:56:11",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-         "47":
-        {
+         "47": {
          "onset": "29/08/2019 02:56:50",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-         "48":
-        {
+         "48": {
          "onset": "29/08/2019 02:59:40",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-         "49":
-        {
+         "49": {
          "onset": "29/08/2019 03:00:00",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
         },
-        "50":
-        {
+        "50": {
          "onset": "29/08/2019 03:01:00",
           "location": ["T"],
           "side": "R",
           "type": "E",
           "state": "sleep"
-        },
-        "baselines": [
+        }
+     },
+     "baselines": [
         {
           "start": "26/08/2019 16:00:00",
           "end": "26/08/2019 19:00:00",
@@ -724,16 +672,429 @@
           "state": "awake"
         }
       ]
+    },  
+          
+    "108": {
+      "age": 45,
+      "start_date": "",
+      "end_date": "",
+      "crises": {
+        "1": {
+          "onset": "10/12/2019 16:54:32",
+          "location": ["T"],
+          "side": "R",
+          "f/g": "FWIA",
+          "state": "awake",
+          "automatisms": true
+        },
+        "2": {
+          "onset": "12/12/2019 09:44:56",
+          "location": ["T"],
+          "side": "R",
+          "f/g": "FWIA",
+          "state": "awake",
+          "automatisms": true
+        },
+        "3": {
+          "onset": "12/12/2019 22:11:35",
+          "location": ["T"],
+          "side": "R",
+          "f/g": "FWIA",
+          "state": "awake",
+          "automatisms": true
+        },
+        "4": {
+          "onset": "13/12/2019 09:45:48",
+          "location": ["PT"],
+          "side": "R",
+          "f/g": "FWIA",
+          "state": "awake",
+          "automatisms": true
+        }
+      },
+      "baselines": [
+        {
+          "start": "10/12/2019 09:00:00",
+          "end": "10/12/2019 14:00:00",
+          "state": "awake"
+        },
+        {
+          "start": "11/12/2019 10:00:00",
+          "end": "11/12/2019 22:00:00",
+          "state": "awake"
+        },
+        {
+          "start": "12/12/2019 12:00:00",
+          "end": "12/12/2019 20:00:00",
+          "state": "awake"
+        },
+        {
+          "start": "13/12/2019 11:00:00",
+          "end": "13/12/2019 15:00:00",
+          "state": "awake"
+        }
+      ]
     },
         
-        
-
-
-
-
-
-
-
+    "109": {
+      "age": 15,
+      "start_date": "07/01/2020",
+      "end_date": "10/01/2020",
+      "crises": {
+        "1": {
+          "onset": "07/01/2020 14:14:30",
+          "location": ["T"],
+          "side": "E",
+          "f/g": "F",
+          "state": "awake",
+          "simple focal": true
+        },
+        "5": {
+          "onset": "09/01/2020 12:03:49",
+          "location": ["TP"],
+          "side": "E",
+          "f/g": "FBTC",
+          "state": "awake",
+          "generalized tonic-clonic": true
+        },
+        "6": {
+          "onset": "09/01/2020 21:03:04",
+          "location": ["T"],
+          "side": "E",
+          "f/g": "FBTC",
+          "state": "awake",
+          "generalized tonic-clonic": true
+        },
+        "7": {
+          "onset": "10/01/2020 00:59:30",
+          "location": ["T"],
+          "side": "E",
+          "f/g": "FBTC",
+          "state": "awake",
+          "generalized tonic-clonic": true
+        },
+        "8": {
+          "onset": "10/01/2020 08:57:00",
+          "location": ["T"],
+          "side": "E",
+          "f/g": "FBTC",
+          "state": "awake",
+          "generalized tonic-clonic": true
+        }
+      },
+      "baselines": [
+        {
+          "start": "07/01/2020 09:00:00",
+          "end": "07/01/2020 12:00:00",
+          "state": "awake"
+        },
+        {
+          "start": "08/01/2020 09:00:00",
+          "end": "08/01/2020 17:00:00",
+          "state": "awake"
+        },
+        {
+          "start": "09/01/2020 14:00:00",
+          "end": "09/01/2020 19:00:00",
+          "state": "awake"
+        }
+      ]
+    },
+    "110": {
+      "age": 57,
+      "start_date": "",
+      "end_date": "",
+      "crises": {
+        "1": {
+          "onset": "11/02/2020 19:41:38",
+          "location": ["T"],
+          "side": "E",
+          "f/g": "FWIA",
+          "state": "awake",
+          "focal to contralateral tonic": true
+        },
+        "2": {
+          "onset": "12/02/2020 13:53:25",
+          "location": ["T"],
+          "side": "E",
+          "f/g": "FWIA",
+          "state": "awake",
+          "focal with right Rinch motion": true
+        },
+        "3": {
+          "onset": "12/02/2020 18:12:27",
+          "location": ["T"],
+          "side": "E",
+          "f/g": "FBTC",
+          "state": "awake"
+        }
+      },
+      "baselines": [
+        {
+          "start": "",
+          "end": "",
+          "state": ""
+        }
+      ]
+    },
+    
+    "111": {
+      "age": 19,
+      "start_date": "18/02/2020",
+      "end_date": "21/02/2020",
+      "crises": {
+        "1": {
+          "onset": "17/02/2020 18:06:23",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "2": {
+          "onset": "18/02/2020 12:16:43",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "3": {
+          "onset": "18/02/2020 12:33:22",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "4": {
+          "onset": "18/02/2020 17:43:26",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "5": {
+          "onset": "19/02/2020 12:47:27",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "6": {
+          "onset": "19/02/2020 12:47:32",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "7": {
+          "onset": "19/02/2020 12:51:37",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "8": {
+          "onset": "19/02/2020 12:55:15",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "9": {
+          "onset": "19/02/2020 12:57:53",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "10": {
+          "onset": "19/02/2020 13:18:45",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "11": {
+          "onset": "19/02/2020 13:21:58",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "12": {
+          "onset": "19/02/2020 13:45:19",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "13": {
+          "onset": "19/02/2020 14:03:39",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "14": {
+          "onset": "19/02/2020 17:34:03",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "15": {
+          "onset": "19/02/2020 20:34:41",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "16": {
+          "onset": "20/02/2020 11:57:44",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "17": {
+          "onset": "20/02/2020 12:00:34",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "18": {
+          "onset": "20/02/2020 12:40:37",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "19": {
+          "onset": "20/02/2020 19:56:56",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "20": {
+          "onset": "20/02/2020 20:20:44",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "21": {
+          "onset": "20/02/2020 21:06:54",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "22": {
+          "onset": "20/02/2020 23:52:26",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "23": {
+          "onset": "21/02/2020 00:31:23",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "24": {
+          "onset": "21/02/2020 07:18:42",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "25": {
+          "onset": "21/02/2020 11:36:12",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "26": {
+          "onset": "24/02/2020 13:29:09",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "27": {
+          "onset": "24/02/2020 15:17:59",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "28": {
+          "onset": "25/02/2020 13:20:29",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "29": {
+          "onset": "25/02/2020 22:07:38",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "30": {
+          "onset": "25/02/2020 22:10:15",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "31": {
+          "onset": "25/02/2020 22:37:58",
+          "location": ["CPO"],
+          "side": "R",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "32": {
+          "onset": "26/02/2020 10:51:00",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        },
+        "33": {
+          "onset": "27/02/2020 08:47:19",
+          "location": [""],
+          "side": "",
+          "f/g": "F",
+          "state": "awake"
+        }
+      },
+      "baselines": [
+        {
+          "start": "17/02/2020 09:00:00",
+          "end": "17/02/2020 16:00:00",
+          "state": "awake"
+        },
+        {
+          "start": "18/02/2020 19:00:00",
+          "end": "18/02/2020 22:00:00",
+          "state": "awake"
+        },
+        {
+          "start": "19/02/2020 09:00:00",
+          "end": "19/02/2020 11:00:00",
+          "state": "awake"
+        }
+      ]
+    },
+    
+    
   }
 }
 
