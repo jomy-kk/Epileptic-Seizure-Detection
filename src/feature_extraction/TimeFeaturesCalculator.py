@@ -11,7 +11,7 @@ class TimeFeaturesCalculator(HRVFeaturesCalculator):
 
     # Labels
     labels = {'nn50': 'NN50', 'pnn50': 'PPN50', 'sdnn': 'Std Dev NNI', 'rmssd': 'Root Mean Std Dev NNI',
-                   'mean': 'Mean NNI', 'var': 'Variance NNI'}
+                   'mean': 'Mean NNI', 'var': 'Variance NNI', 'hr': 'Mean HR', 'maxhr': 'maximum beats per minute'}
 
     def get_nn50(self):
         if not hasattr(self, 'nn50'):
@@ -42,3 +42,13 @@ class TimeFeaturesCalculator(HRVFeaturesCalculator):
         if not hasattr(self, 'var'):
             self.var = self.nni.var()
         return self.var
+
+    def get_hr(self):
+        if not hasattr(self, 'hr'):
+            self.hr = 60*1000/self.nni.mean() #60000 ms (1 minute) / average nni
+        return self.hr
+
+    def get_maxhr(self):
+        if not hasattr(self, 'maxhr'):
+            self.maxhr = np.amax(60*1000/self.nni)
+        return self.maxhr
