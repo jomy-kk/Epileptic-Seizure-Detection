@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-from feature_extraction.HRVFeaturesCalculator import HRVFeaturesCalculator
+from src.feature_extraction.HRVFeaturesCalculator import HRVFeaturesCalculator
 
 
 class PointecareFeaturesCalculator(HRVFeaturesCalculator):

@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.signal import welch
 
-from feature_extraction.HRVFeaturesCalculator import HRVFeaturesCalculator
+from src.feature_extraction.HRVFeaturesCalculator import HRVFeaturesCalculator
 
 
 class FrequencyFeaturesCalculator(HRVFeaturesCalculator):

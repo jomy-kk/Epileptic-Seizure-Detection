@@ -1,13 +1,13 @@
 import numpy as np
 import pandas as pd
 
-from feature_extraction.FrequencyFeaturesCalculator import FrequencyFeaturesCalculator
-from feature_extraction.HRVFeaturesCalculator import HRVFeaturesCalculator
-from feature_extraction.KatzFeaturesCalculator import KatzFeaturesCalculator
-from feature_extraction.PointecareFeaturesCalculator import PointecareFeaturesCalculator
-from feature_extraction.RQAFeaturesCalculator import RQAFeaturesCalculator
-from feature_extraction.TimeFeaturesCalculator import TimeFeaturesCalculator
-import feature_extraction.io
+from src.feature_extraction.FrequencyFeaturesCalculator import FrequencyFeaturesCalculator
+from src.feature_extraction.HRVFeaturesCalculator import HRVFeaturesCalculator
+from src.feature_extraction.KatzFeaturesCalculator import KatzFeaturesCalculator
+from src.feature_extraction.PointecareFeaturesCalculator import PointecareFeaturesCalculator
+from src.feature_extraction.RQAFeaturesCalculator import RQAFeaturesCalculator
+from src.feature_extraction.TimeFeaturesCalculator import TimeFeaturesCalculator
+import src.feature_extraction.io
 
 
 def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _frequency=False, _pointecare=False,
