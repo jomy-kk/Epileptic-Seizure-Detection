@@ -143,9 +143,10 @@ def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_fe
 def segment_nni_signal(nni_signal, n_samples_segment, n_samples_overlap=0):
     date_time_indexes = list(nni_signal['nni'].keys())
     step = n_samples_segment - n_samples_overlap
-    segmented_nni = [nni_signal[i: i + n_samples_segment] for i in range(0, len(nni_signal), step)]
-    segmented_date_time = [date_time_indexes[i: i + n_samples_segment] for i in range(0, len(date_time_indexes), step)]
+    segmented_nni = [nni_signal[i: i + n_samples_segment] for i in range(0, len(nni_signal)-n_samples_segment, step)]
+    segmented_date_time = [date_time_indexes[i: i + n_samples_segment] for i in range(0, len(date_time_indexes)-n_samples_segment, step)]
     print("Divided signal into " + str(len(segmented_nni)) + " samples.")
+    assert len(segmented_nni) == len(segmented_date_time)
     return segmented_nni, segmented_date_time
 
 
