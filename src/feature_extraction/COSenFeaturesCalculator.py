@@ -13,12 +13,12 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
     labels = {'se': 'Sample Entropy', 'cosen': 'COSen: Coefficient of Sample Entropy'}
 
     #@private
-    def distance(self, X, i, j):
+    def get_distance(self, X, i, j):
         dist = np.abs(X[i] - X[j])
         return np.max(dist)
 
     # @private
-    def get_entropyb(self, 'entropyb', m, g):
+    def get_entropyb(self, m, g):
         N = len(self.nni)
         X = []
 
@@ -36,7 +36,7 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
             Bi = 0
             for j in range(0, N - m):
                 if j != i:
-                    if distance(X, i, j) <= r:
+                    if self.get_distance(X, i, j) <= r:
                         Bi = Bi + 1
 
             Bi = Bi / (N - m - 1)
