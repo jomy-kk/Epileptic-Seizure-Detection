@@ -95,7 +95,7 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
         return self.sampen
 
     def get_cosen(self):
-        self.cosen= self.sampen + math.log(2*self.g*self.r) - math.log(self.nni.mean())
+        self.cosen= self.sampen + math.log(2*self.r) - math.log(self.nni.mean())
         return self.cosen
 
 
