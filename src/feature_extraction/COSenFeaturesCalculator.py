@@ -15,23 +15,24 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
     labels = {'sampen': 'Sample Entropy', 'cosen': 'COSen: Coefficient of Sample Entropy'}
 
     # @private
-    def get_r(self):
+    def get_r(self, m):
         N = len(self.nni)
         X = []
 
         # Get sequences of m matches
-        for i in range(0, N - self.m - 1):
-            X_m_i = self.nni[i:i + self.m - 1]
+        for i in range(0, N - m + 1):
+            X_m_i = self.nni[i:i + m]
             X.append(X_m_i)
         X = np.asarray(X)
 
-        self.r = self.g * np.std(X)
-        return self.r
+        r = self.g * np.std(X)
+        return r
 
     # @private
     def get_distance(self, X, i, j):
         dist = np.abs(X[i] - X[j])
-        return np.max(dist)
+        max= np.max(dist)
+        return max
 
     # @private
     def get_entropyb(self):
@@ -39,25 +40,26 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
         X = []
 
         # Get sequences of m matches
-        for i in range(0,N - self.m - 1):
-            X_m_i = self.nni[i:i+self.m-1]
+        for i in range(0,N - self.m + 1):
+            X_m_i = self.nni[i:i+self.m]
             X.append(X_m_i)
         X = np.asarray(X)
 
         B_vector = []
 
+        r = self.get_r(self.m)
+
         for i in range(0, N - self.m):
             Bi = 0
             for j in range(0, N - self.m):
                 if j != i:
-                    if self.get_distance(X, i, j) <= self.r:
+                    if self.get_distance(X, i, j) <= r:
                         Bi = Bi + 1
 
             Bi = Bi / (N - self.m - 1)
             B_vector.append(Bi)
 
         B_vector = np.asarray(B_vector)
-
         self.Bm = 1/(N - self.m) * B_vector.sum()
         return self.Bm
 
@@ -68,17 +70,17 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
 
         # Get sequences of m matches
         for i in range(0, N - self.m):
-            X_m_i = self.nni[i:i + self.m]
+            X_m_i = self.nni[i:i + self.m + 1]
             X.append(X_m_i)
         X = np.asarray(X)
 
         A_vector = []
-
-        for i in range(0, N - self.m):
+        r= self.get_r(self.m + 1)
+        for i in range(0, N - self.m - 1):
             Ai = 0
-            for j in range(0, N - self.m):
+            for j in range(0, N - self.m - 1):
                 if j != i:
-                    if self.get_distance(X, i, j) <= self.r:
+                    if self.get_distance(X, i, j) <= r:
                         Ai = Ai + 1
 
             Ai = Ai / (N - self.m - 1)
@@ -95,7 +97,7 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
         return self.sampen
 
     def get_cosen(self):
-        self.cosen= self.sampen + math.log(2*self.r) - math.log(self.nni.mean())
+        self.cosen= self.sampen + math.log(2*self.get_r(self.m)) - math.log(self.nni.mean())
         return self.cosen
 
 
