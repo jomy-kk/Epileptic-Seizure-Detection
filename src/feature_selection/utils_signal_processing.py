@@ -1,8 +1,8 @@
 import numpy as np
 from scipy.stats import pearsonr
 
-def clean_outliers(templates, way = 'q'):
 
+def clean_outliers(templates, way='q'):
     var = templates.var(axis=1)
 
     if way == 'q':
@@ -20,16 +20,14 @@ def clean_outliers(templates, way = 'q'):
 
 
 def normalise_feats(features, norm='minmax'):
-
     if norm == 'stand':
-        return (features - features.mean())/(features.std())
+        return (features - features.mean()) / (features.std())
 
     elif norm == 'minmax':
-        return (features - features.min())/(features.max()-features.min())
+        return (features - features.min()) / (features.max() - features.min())
 
 
 def correlation_feats(features, th=0.99):
-
     fcorr = features.corr('pearson') >= th
 
     idx = np.argwhere(fcorr.get_values() == True)
@@ -38,5 +36,3 @@ def correlation_feats(features, th=0.99):
     idx_ = corr_idx.reshape(-1, 2)[:, 1][:len(corr_idx) // 2]
 
     return features.drop(columns=features.columns[idx_])
-
-
