@@ -181,7 +181,7 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
     individual features specified in needed_features.
     """
 
-    sf = feature_extraction.io.metadata['sampling_frequency']  # Hz
+    sf = src.feature_extraction.io.metadata['sampling_frequency']  # Hz
     n_samples_segment = segment_time * sf
     n_samples_overlap = segment_overlap_time * sf
 
@@ -208,7 +208,7 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
 
     # Auxiliary procedure
     def __extract_crisis_hrv_features(patient, crisis):
-        nni_signal = feature_extraction.io.__read_crisis_nni(patient, crisis)
+        nni_signal = src.feature_extraction.io.__read_crisis_nni(patient, crisis)
         segmented_nni, segmented_date_time = segment_nni_signal(nni_signal, n_samples_segment, n_samples_overlap=n_samples_overlap)
         features = pd.DataFrame(columns=labels)
 
@@ -230,7 +230,7 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
             features = features.rename({i: t}, axis='index')
 
         if _save:
-            feature_extraction.io.__save_crisis_hrv_features(patient, crisis, features)
+            src.feature_extraction.io.__save_crisis_hrv_features(patient, crisis, features)
 
         return features
 
@@ -240,11 +240,11 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
                 patient) + ". Are you sure? y/n").lower() == 'n':
             return
         # extract features for all crisis of the given patient
-        crises = feature_extraction.io.__get_patient_crises_numbers(patient)
+        crises = src.feature_extraction.io.__get_patient_crises_numbers(patient)
         features_set = {}
         for crisis in crises:
             # check if it already exists
-            features = feature_extraction.io.__read_crisis_hrv_features(patient, crisis)
+            features = src.feature_extraction.io.__read_crisis_hrv_features(patient, crisis)
             if features is not None:
                 if input("An HRV features HDF5 file for this patient's crisis " + str(
                         crisis) + " was found with the features " + str(
@@ -261,7 +261,7 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
         features_set = {}
         for crisis in crises:
             # check if it already exists
-            features = feature_extraction.io.__read_crisis_hrv_features(patient, crisis)
+            features = src.feature_extraction.io.__read_crisis_hrv_features(patient, crisis)
             if features is not None:
                 if input("An HRV features HDF5 file for this patient's crisis " + str(crisis) + " was found with the features " + str(
                         list(features.columns)) + ".\nDiscard and recompute? y/n").lower() == 'y':
@@ -275,7 +275,7 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
 
     elif isinstance(crises, int):
         # check if it already exists
-        features = feature_extraction.io.__read_crisis_hrv_features(patient, crises)
+        features = src.feature_extraction.io.__read_crisis_hrv_features(patient, crises)
         if features is not None:
             if input("An HRV features HDF5 file for this patient/crisis was found with the features " + str(list(features.columns)) + ".\nDiscard and recompute? y/n").lower() == 'y':
                 print("Recomputing...")
@@ -298,7 +298,7 @@ def extract_hrv_features_all_patients(n_samples_segment: int, _save=True):
     dictionary with one element for each crisis of that patient, identified by the crisis number. Each of these elements
     are a pd.Dataframe containing the extracted features in each column by segments in rows.
     """
-    all_patient_numbers = feature_extraction.io.__get_patient_numbers()
+    all_patient_numbers = src.feature_extraction.io.__get_patient_numbers()
     patients_set = {}
     for patient in all_patient_numbers:
         patients_set[patient] = extract_patient_hrv_features(n_samples_segment, patient, None, _save=_save)
@@ -313,7 +313,7 @@ def get_patient_hrv_features(patient: int, crisis: int):
     :param crisis: Integer number of the crisis of the patient.
     :return:
     """
-    features = feature_extraction.io.__read_crisis_hrv_features(patient, crisis)
+    features = src.feature_extraction.io.__read_crisis_hrv_features(patient, crisis)
 
     if features is None:  # HDF not found, compute the features
         if input(
