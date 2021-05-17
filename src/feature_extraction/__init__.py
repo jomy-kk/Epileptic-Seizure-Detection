@@ -342,8 +342,16 @@ def get_patient_hrv_features(patient: int, crisis: int):
             else:
                 needed_features = needed_features.split(sep=' ')
 
+            m, g = None, None
+
+            for f in COSenFeaturesCalculator.labels:
+                if (f in needed_features) or (needed_features is None):  # meio que estupido, mas reduz o codigo xD
+                    m = input("For the COSen features, give a m: ")
+                    g = input("For the COSen features, give a g: ")
+                    break
+
             print("Extracting features...")
-            features = extract_patient_hrv_features(int(segment_seconds), patient, crisis,
+            features = extract_patient_hrv_features(int(segment_seconds), patient, crisis, m=m, g=g,
                                                     needed_features=needed_features, _save=True)
             print("Feature extraction saved.")
             return features
