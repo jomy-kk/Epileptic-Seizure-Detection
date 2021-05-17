@@ -7,12 +7,12 @@ from src.feature_extraction.KatzFeaturesCalculator import KatzFeaturesCalculator
 from src.feature_extraction.PointecareFeaturesCalculator import PointecareFeaturesCalculator
 from src.feature_extraction.RQAFeaturesCalculator import RQAFeaturesCalculator
 from src.feature_extraction.TimeFeaturesCalculator import TimeFeaturesCalculator
+from src.feature_extraction.COSenFeaturesCalculator import COSenFeaturesCalculator
 import src.feature_extraction.io
 
 
 def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _frequency=False, _pointecare=False,
-                                 _katz=False,
-                                 _rqa=False):
+                                 _katz=False, _rqa=False, _cosen=False, m=None, g=None):
     """
     Method 1: Get all features of a group or groups.
     Given an nni segment and its sampling frequency, extracts and returns all the features of the groups marked as True.
@@ -23,12 +23,14 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _
     :param _pointecare: Pass as True to compute all pointecare features.
     :param _katz: Pass as True to compute all katz features.
     :param _rqa: Pass as True to compute all recurrent quantitative analysis features.
+    :param _cosen: Pass as True to compute all COSen features.
+    :param m: M parameter for the COSen calculator  //TODO: Debora - especifica o que é m
+    :param g: G parameter for the COSen calculator  //TODO: Debora - especifica o que é g
     :return extracted_features: An np.hstack with all the requested features.
     """
     extracted_features = []
 
     if _time:
-        from feature_extraction.TimeFeaturesCalculator import TimeFeaturesCalculator
         features_calculator = TimeFeaturesCalculator(nni_segment, sampling_frequency)
         extracted_features = np.hstack((extracted_features,
                                         features_calculator.get_mean(),
@@ -40,7 +42,6 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _
                                         ))
 
     if _frequency:
-        from feature_extraction.FrequencyFeaturesCalculator import FrequencyFeaturesCalculator
         features_calculator = FrequencyFeaturesCalculator(nni_segment, sampling_frequency)
         extracted_features = np.hstack((extracted_features,
                                         features_calculator.get_lf(),
@@ -50,7 +51,6 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _
                                         ))
 
     if _pointecare:
-        from feature_extraction.PointecareFeaturesCalculator import PointecareFeaturesCalculator
         features_calculator = PointecareFeaturesCalculator(nni_segment)
         extracted_features = np.hstack((extracted_features,
                                         features_calculator.get_sd1(),
@@ -60,14 +60,12 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _
                                         ))
 
     if _katz:
-        from feature_extraction.KatzFeaturesCalculator import KatzFeaturesCalculator
         features_calculator = KatzFeaturesCalculator(nni_segment)
         extracted_features = np.hstack((extracted_features,
                                         features_calculator.get_katz_fractal_dim(),
                                         ))
 
     if _rqa:
-        from feature_extraction.RQAFeaturesCalculator import RQAFeaturesCalculator
         features_calculator = RQAFeaturesCalculator(nni_segment)
         extracted_features = np.hstack((extracted_features,
                                         features_calculator.get_rec(),
@@ -75,11 +73,18 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _
                                         features_calculator.get_lmax(),
                                         ))
 
+    if _cosen:
+        features_calculator = COSenFeaturesCalculator(nni_segment, m, g)
+        extracted_features = np.hstack((extracted_features,
+                                        features_calculator.get_sampen(),
+                                        features_calculator.get_cosen(),
+                                        ))
+
     del features_calculator
     return extracted_features
 
 
-def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_features: list):
+def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_features: list, m=None, g=None):
     """
     Method 2: Specify which features are needed. More inefficient.
     Given an nni segment and its sampling frequency, extracts and returns the requested needed features.
@@ -87,6 +92,8 @@ def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_fe
     :param sampling_frequency: Sampling frequency (in Hertz) of the nni segment.
     :param needed_features: List containing the needed features in strings. Any feature is possible if defined in
     the HRVFeaturesCalculator classes.
+    :param m: M parameter for the COSen calculator  //TODO: Debora - especifica o que é m
+    :param g: G parameter for the COSen calculator  //TODO: Debora - especifica o que é g
     :return features: A list of the requested feature values.
     """
 
@@ -136,6 +143,11 @@ def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_fe
     extracted_features = np.hstack((extracted_features, f))
     labels += l
 
+    features_calculator = COSenFeaturesCalculator(nni_segment, m, g)
+    f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
+    extracted_features = np.hstack((extracted_features, f))
+    labels += l
+
     del features_calculator
     return extracted_features
 
@@ -151,7 +163,8 @@ def segment_nni_signal(nni_signal, n_samples_segment, n_samples_overlap=0):
 
 
 def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, segment_overlap_time=0,
-                                 _time=False, _frequency=False, _pointecare=False, _katz=False, _rqa=False,
+                                 _time=False, _frequency=False, _pointecare=False, _katz=False, _rqa=False, _cosen=False,
+                                 m=None, g=None,
                                  needed_features: list = None,
                                  _save=True):
     """
@@ -168,6 +181,9 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
     :param _pointecare: Pass as True to compute all pointecare features.
     :param _katz: Pass as True to compute all katz features.
     :param _rqa: Pass as True to compute all recurrent quantitative analysis features.
+    :param _cosen: Pass as True to compute all COSen features.
+    :param m: M parameter for the COSen calculator  //TODO: Debora - especifica o que é m
+    :param g: G parameter for the COSen calculator  //TODO: Debora - especifica o que é g
 
     :param needed_features: List containing the needed features in strings. Any feature is possible if defined in
     the HRVFeaturesCalculator classes.
@@ -198,6 +214,8 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
         labels += list(KatzFeaturesCalculator.labels.values())
     if _rqa:
         labels += list(RQAFeaturesCalculator.labels.values())
+    if _cosen:
+        labels += list(COSenFeaturesCalculator.labels.values())
     # individual features
     if needed_features is not None:
         for f in needed_features:
@@ -217,8 +235,7 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
                                              segmented_date_time):
             # group features
             extracted_features = extract_segment_hrv_features(segment, sf, _time=_time, _frequency=_frequency,
-                                                              _pointecare=_pointecare,
-                                                              _katz=_katz, _rqa=_rqa)
+                                                              _pointecare=_pointecare, _katz=_katz, _rqa=_rqa, _cosen=_cosen)
 
             # individual features
             if needed_features is not None:
