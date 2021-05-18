@@ -345,7 +345,7 @@ def get_patient_hrv_features(patient: int, crisis: int):
             m, g = None, None
 
             for f in COSenFeaturesCalculator.labels:
-                if (f in needed_features) or (needed_features is None):  # meio que estupido, mas reduz o codigo xD
+                if (needed_features is None) or (f in needed_features):  # meio que estupido, mas reduz o codigo xD
                     m = input("For the COSen features, give a m: ")
                     g = input("For the COSen features, give a g: ")
                     break
