@@ -24,8 +24,8 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _
     :param _katz: Pass as True to compute all katz features.
     :param _rqa: Pass as True to compute all recurrent quantitative analysis features.
     :param _cosen: Pass as True to compute all COSen features.
-    :param m: M parameter for the COSen calculator  //TODO: Debora - especifica o que é m
-    :param g: G parameter for the COSen calculator  //TODO: Debora - especifica o que é g
+    :param m: m parameter for the COSen calculator referring to the embedding dimension. It should be an integer, usually between 1-5.
+    :param g: g parameter for the COSen calculator used to calculate de vector comparison distance (r). Value in percentage.Usually between 01-0.5.
     :return extracted_features: An np.hstack with all the requested features.
     """
     extracted_features = []

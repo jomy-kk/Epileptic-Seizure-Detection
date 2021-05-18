@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="98585f29-2891-4992-9589-f9747fad25ee" name="Default Changelist" comment="Refactor allows COSen features to be extracted in">
-      <change beforePath="$PROJECT_DIR$/data/patients.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/patients.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_extraction/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_extraction/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_extraction/io.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_extraction/io.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_selection/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_selection/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_selection/utils_signal_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_selection/utils_signal_processing.py" afterDir="false" />
+    <list default="true" id="c6651ba7-ccbe-4984-a444-83096d773c78" name="Default Changelist" comment="Added COSen feature">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,32 +13,13 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Python Script" />
-        <option value="package.json" />
-        <option value="Python Unit Test" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
-  <component name="GitSEFilterConfiguration">
-    <file-type-list>
-      <filtered-out-file-type name="LOCAL_BRANCH" />
-      <filtered-out-file-type name="REMOTE_BRANCH" />
-      <filtered-out-file-type name="TAG" />
-      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
-    </file-type-list>
-  </component>
-  <component name="GithubPullRequestsUISettings">
-    <option name="hiddenUrls">
-      <set>
-        <option value="https://github.com/jomy-kk/epilepsy_mlb" />
-      </set>
-    </option>
-  </component>
-  <component name="ProjectId" id="1s76U4NAKSTQz9u5IRL29VMdXCE" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectId" id="1sRK7Df8EwAQPkChIpluxKnS5gH" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -50,31 +27,22 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="fileTemplates" />
+    <property name="settings.editor.selected.configurable" value="file.status.colors" />
   </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/feature_extraction" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Python.__init__">
-    <configuration name="__init__" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="epilepsy_mlb" />
+  <component name="RunManager">
+    <configuration name="COSenTest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="epilepsy_mlb_jomy-kk" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/feature_selection" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/feature_extraction" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/feature_selection/__init__.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/feature_extraction/COSenTest.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -83,204 +51,89 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for extract_patient_hrv_features.MyTestCase" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
-      <module name="epilepsy_mlb" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;extract_patient_hrv_features.MyTestCase&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.__init__" />
-        <item itemvalue="Python tests.pytest for extract_patient_hrv_features.MyTestCase" />
+        <item itemvalue="Python.COSenTest" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\Débora Albuquerque\AppData\Roaming\Subversion</configuration>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="98585f29-2891-4992-9589-f9747fad25ee" name="Default Changelist" comment="" />
-      <created>1620211293226</created>
+      <changelist id="c6651ba7-ccbe-4984-a444-83096d773c78" name="Default Changelist" comment="" />
+      <created>1620829793203</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1620211293226</updated>
-      <workItem from="1620211321175" duration="19403000" />
-      <workItem from="1620681607862" duration="6980000" />
-      <workItem from="1620748709214" duration="306000" />
-      <workItem from="1620749049316" duration="12854000" />
-      <workItem from="1620824787081" duration="1503000" />
-      <workItem from="1621260085283" duration="24443000" />
+      <updated>1620829793203</updated>
     </task>
-    <task id="LOCAL-00001" summary="Add time domain feature extraction, close #1">
-      <created>1620224787613</created>
+    <task id="LOCAL-00001" summary="Added hr and maxhr to timefeaturescalculator">
+      <created>1620847113883</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1620224787613</updated>
+      <updated>1620847113883</updated>
     </task>
-    <task id="LOCAL-00002" summary="Refactored class names">
-      <created>1620225027760</created>
+    <task id="LOCAL-00002" summary="Changed import paths. Was giving problem notifications.">
+      <created>1620847603089</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1620225027760</updated>
+      <updated>1620847603089</updated>
     </task>
-    <task id="LOCAL-00003" summary="Time domain labels">
-      <created>1620225296441</created>
+    <task id="LOCAL-00003" summary="Added S feature to Poincare plot">
+      <created>1620853059593</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
       <option name="project" value="LOCAL" />
-      <updated>1620225296441</updated>
+      <updated>1620853059593</updated>
     </task>
-    <task id="LOCAL-00004" summary="Frequency domain labels">
-      <created>1620225396250</created>
+    <task id="LOCAL-00004" summary="COSen feature">
+      <created>1620857719589</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1620225396250</updated>
+      <updated>1620857719589</updated>
     </task>
-    <task id="LOCAL-00005" summary="Fixed domain labels">
-      <created>1620225944730</created>
+    <task id="LOCAL-00005" summary="COSen feature">
+      <created>1620858129304</created>
       <option name="number" value="00005" />
       <option name="presentableId" value="LOCAL-00005" />
       <option name="project" value="LOCAL" />
-      <updated>1620225944730</updated>
+      <updated>1620858129304</updated>
     </task>
-    <task id="LOCAL-00006" summary="Add __get_hrv_features">
-      <created>1620226279506</created>
+    <task id="LOCAL-00006" summary="Added COSen feature">
+      <created>1620934588451</created>
       <option name="number" value="00006" />
       <option name="presentableId" value="LOCAL-00006" />
       <option name="project" value="LOCAL" />
-      <updated>1620226279506</updated>
+      <updated>1620934588451</updated>
     </task>
-    <task id="LOCAL-00007" summary="Allow to extract specific features">
-      <created>1620227679709</created>
+    <task id="LOCAL-00007" summary="Added COSen feature">
+      <created>1620939894896</created>
       <option name="number" value="00007" />
       <option name="presentableId" value="LOCAL-00007" />
       <option name="project" value="LOCAL" />
-      <updated>1620227679710</updated>
+      <updated>1620939894896</updated>
     </task>
-    <task id="LOCAL-00008" summary="Cleans memory">
-      <created>1620227818418</created>
+    <task id="LOCAL-00008" summary="Added COSen feature">
+      <created>1620945072806</created>
       <option name="number" value="00008" />
       <option name="presentableId" value="LOCAL-00008" />
       <option name="project" value="LOCAL" />
-      <updated>1620227818418</updated>
+      <updated>1620945072806</updated>
     </task>
-    <task id="LOCAL-00009" summary="Add methods for personalized feature extraction&#10;&#10;close #2 #3 #4 #5">
-      <created>1620233837835</created>
+    <task id="LOCAL-00009" summary="PyCharm configuration files added.">
+      <created>1621359403222</created>
       <option name="number" value="00009" />
       <option name="presentableId" value="LOCAL-00009" />
       <option name="project" value="LOCAL" />
-      <updated>1620233837835</updated>
+      <updated>1621359403222</updated>
     </task>
-    <task id="LOCAL-00010" summary="Add patients metadata">
-      <created>1620745722059</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1620745722059</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Fix patients metadata">
-      <created>1620745859007</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1620745859007</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Fix feature_extraction">
-      <created>1620753725747</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1620753725747</updated>
-    </task>
-    <task id="LOCAL-00013" summary="Fix some data file names">
-      <created>1620754410634</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1620754410634</updated>
-    </task>
-    <task id="LOCAL-00014" summary="Add read/write baseline files">
-      <created>1620754783267</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1620754783267</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Add datasets">
-      <created>1620756874165</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1620756874165</updated>
-    </task>
-    <task id="LOCAL-00016" summary="Allow for reuse of previous extractions">
-      <created>1620760473804</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1620760473804</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Add sliding window segmentation">
-      <created>1620761853320</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1620761853320</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Fix segment overlap">
-      <created>1620825790650</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1620825790650</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Reformat file">
-      <created>1621260223460</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1621260223460</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Fix import path (src. missing)">
-      <created>1621260717499</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1621260717499</updated>
-    </task>
-    <task id="LOCAL-00021" summary="Refactor allows COSen features to be extracted&#10;&#10;Rename procedures to convention">
-      <created>1621261648358</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1621261648358</updated>
-    </task>
-    <task id="LOCAL-00022" summary="COSen features to be extracted in get_patient_hrv_features">
-      <created>1621263119962</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1621263119962</updated>
-    </task>
-    <option name="localTasksCounter" value="23" />
+    <option name="localTasksCounter" value="10" />
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -295,32 +148,12 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add time domain feature extraction, close #1" />
-    <MESSAGE value="Refactored class names" />
-    <MESSAGE value="Time domain labels" />
-    <MESSAGE value="Frequency domain labels" />
-    <MESSAGE value="Fixed domain labels" />
-    <MESSAGE value="Add __get_hrv_features" />
-    <MESSAGE value="Allow to extract specific features" />
-    <MESSAGE value="Cleans memory" />
-    <MESSAGE value="Add methods for personalized feature extraction&#10;&#10;close #2 #3 #4 #5" />
-    <MESSAGE value="Add patients metadata" />
-    <MESSAGE value="Fix patients metadata" />
-    <MESSAGE value="Fix feature_extraction" />
-    <MESSAGE value="Fix some data file names" />
-    <MESSAGE value="Add read/write baseline files" />
-    <MESSAGE value="Add datasets" />
-    <MESSAGE value="Allow for reuse of previous extractions" />
-    <MESSAGE value="Add sliding window segmentation" />
-    <MESSAGE value="Fix segment overlap" />
-    <MESSAGE value="Reformat file" />
-    <MESSAGE value="Fix import path (src. missing)" />
-    <MESSAGE value="Refactor allows COSen features to be extracted&#10;&#10;Rename procedures to convention" />
-    <MESSAGE value="COSen features to be extracted in get_patient_hrv_features" />
-    <option name="LAST_COMMIT_MESSAGE" value="COSen features to be extracted in get_patient_hrv_features" />
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/epilepsy_mlb$__init__.coverage" NAME="__init__ Coverage Results" MODIFIED="1621286512851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/feature_selection" />
-    <SUITE FILE_PATH="coverage/epilepsy_mlb$pytest_for_extract_patient_hrv_features_MyTestCase.coverage" NAME="pytest for extract_patient_hrv_features.MyTestCase Coverage Results" MODIFIED="1620758560863" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <MESSAGE value="Added hr and maxhr to timefeaturescalculator" />
+    <MESSAGE value="Changed import paths. Was giving problem notifications." />
+    <MESSAGE value="Added S feature to Poincare plot" />
+    <MESSAGE value="COSen feature" />
+    <MESSAGE value="Added COSen feature" />
+    <MESSAGE value="PyCharm configuration files added." />
+    <option name="LAST_COMMIT_MESSAGE" value="PyCharm configuration files added." />
   </component>
 </project>
