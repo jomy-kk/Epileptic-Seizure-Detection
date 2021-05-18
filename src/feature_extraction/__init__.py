@@ -92,8 +92,8 @@ def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_fe
     :param sampling_frequency: Sampling frequency (in Hertz) of the nni segment.
     :param needed_features: List containing the needed features in strings. Any feature is possible if defined in
     the HRVFeaturesCalculator classes.
-    :param m: M parameter for the COSen calculator  //TODO: Debora - especifica o que é m
-    :param g: G parameter for the COSen calculator  //TODO: Debora - especifica o que é g
+   :param m: m parameter for the COSen calculator referring to the embedding dimension. It should be an integer, usually between 1-5.
+    :param g: g parameter for the COSen calculator used to calculate de vector comparison distance (r). Value in percentage.Usually between 01-0.5.
     :return features: A list of the requested feature values.
     """
 
@@ -182,8 +182,8 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
     :param _katz: Pass as True to compute all katz features.
     :param _rqa: Pass as True to compute all recurrent quantitative analysis features.
     :param _cosen: Pass as True to compute all COSen features.
-    :param m: M parameter for the COSen calculator  //TODO: Debora - especifica o que é m
-    :param g: G parameter for the COSen calculator  //TODO: Debora - especifica o que é g
+    :param m: m parameter for the COSen calculator referring to the embedding dimension. It should be an integer, usually between 1-5.
+    :param g: g parameter for the COSen calculator used to calculate de vector comparison distance (r). Value in percentage.Usually between 01-0.5.
 
     :param needed_features: List containing the needed features in strings. Any feature is possible if defined in
     the HRVFeaturesCalculator classes.
