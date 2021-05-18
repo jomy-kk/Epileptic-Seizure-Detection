@@ -17,10 +17,10 @@ import tkinter as tk
 from functools import partial
 from math import sqrt
 
-from src.feature_extraction import get_patient_hrv_features
+from src.feature_extraction import get_patient_hrv_features, get_patient_hrv_baseline_features
 
 
-data_path = '../../data'
+data_path = './data'
 
 
 def get_features_from_patients(patients: list, crises: list):
@@ -29,6 +29,14 @@ def get_features_from_patients(patients: list, crises: list):
         features = dict()
         for crisis in crises:
             features[crisis] = get_patient_hrv_features(patient, crisis)
+        res[patient] = features
+    return res
+
+def get_baseline_from_patients(patients: list, state : str):
+    res = dict()
+    for patient in patients:
+        features = dict()
+        features[state] = get_patient_hrv_baseline_features(patient, state)
         res[patient] = features
     return res
 
@@ -115,12 +123,23 @@ class Table:
             for c in p.values():
                 c[f].set(new_value)
 
+def get_full_baseline(patients):
+    baseline_awake = get_baseline_from_patients(patients, "awake")
+    baseline_asleep = get_baseline_from_patients(patients, "asleep")
+
+    for patient in patients:
+        if baseline_awake[patient] is not None:
+            if baseline_asleep[patient] is not None:
+                baseline_awake[patient].update(baseline_asleep[patient])
 
 
+    return baseline_awake
 
 patients = [101, ]
 crises = [1, 2, 3]
+state = "awake"
 features = get_features_from_patients(patients, crises)
+baseline = get_full_baseline(patients)
 
 # create root window
 #root = tk.Tk()

@@ -1,7 +1,7 @@
 import json
 import pandas as pd
 
-data_path = 'data'
+data_path = './data'
 
 with open(data_path + '/patients.json') as metadata_file:
     metadata = json.load(metadata_file)
