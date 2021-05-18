@@ -14,8 +14,10 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
     # Labels
     labels = {'sampen': 'Sample Entropy', 'cosen': 'COSen: Coefficient of Sample Entropy'}
 
+    # Auxiliary private procedures
+
     # @private
-    def get_r(self, m):
+    def __r(self, m):
         N = len(self.nni)
         X = []
 
@@ -29,13 +31,13 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
         return r
 
     # @private
-    def get_distance(self, X, i, j):
+    def __distance(self, X, i, j):
         dist = np.abs(X[i] - X[j])
         max= np.max(dist)
         return max
 
     # @private
-    def get_entropyb(self):
+    def __entropyb(self):
         N = len(self.nni)
         X = []
 
@@ -47,13 +49,13 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
 
         B_vector = []
 
-        r = self.get_r(self.m)
+        r = self.__r(self.m)
 
         for i in range(0, N - self.m):
             Bi = 0
             for j in range(0, N - self.m):
                 if j != i:
-                    if self.get_distance(X, i, j) <= r:
+                    if self.__distance(X, i, j) <= r:
                         Bi = Bi + 1
 
             Bi = Bi / (N - self.m - 1)
@@ -64,7 +66,7 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
         return self.Bm
 
     # @private
-    def get_entropya(self):
+    def __entropya(self):
         N = len(self.nni)
         X = []
 
@@ -75,12 +77,12 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
         X = np.asarray(X)
 
         A_vector = []
-        r= self.get_r(self.m + 1)
+        r= self.__r(self.m + 1)
         for i in range(0, N - self.m - 1):
             Ai = 0
             for j in range(0, N - self.m - 1):
                 if j != i:
-                    if self.get_distance(X, i, j) <= r:
+                    if self.__distance(X, i, j) <= r:
                         Ai = Ai + 1
 
             Ai = Ai / (N - self.m - 1)
@@ -92,18 +94,13 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
 
         return self.Am
 
+    # Methods to publicly call
+
     def get_sampen(self):
         self.sampen= math.log(self.Bm/self.Am)
         return self.sampen
 
     def get_cosen(self):
-        self.cosen= self.sampen + math.log(2*self.get_r(self.m)) - math.log(self.nni.mean())
+        self.cosen= self.sampen + math.log(2 * self.__r(self.m)) - math.log(self.nni.mean())
         return self.cosen
-
-
-
-
-
-
-
 
