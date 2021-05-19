@@ -37,20 +37,70 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
         return max
 
     # @private
+    def get_sampen(self):
+        N = len(self.nni)
+        Xa = []
+        Xb = []
+
+        # Get sequences of m matches
+        for i in range(0, N - self.m + 1):
+            X_m_i_b = self.nni[i:i+self.m]
+            Xb.append(X_m_i_b)
+
+            if i < N - self.m:
+                X_m_i_a = self.nni[i:i+self.m+1]
+                Xa.append(X_m_i_a)
+
+        Xb = np.asarray(Xb)
+        Xa = np.asarray(Xa)
+
+        B_sum = 0
+        A_sum = 0
+
+        ra= self.__r(self.m + 1)
+        rb= self.__r(self.m)
+
+        for i in range(0, N - self.m):
+            Bi = 0
+            Ai = 0
+            for j in range(0, N - self.m):
+                if j != i:
+                    if self.__distance(Xb, i, j) <= rb:
+                        Bi = Bi + 1
+
+                    if i < N - self.m - 1 and j < N - self.m - 1:
+                        if self.__distance(Xa, i, j) <= ra:
+                            Ai = Ai + 1
+
+            Bi = Bi / (N - self.m - 1)
+            B_sum = B_sum + Bi
+
+            if i <= N - self.m - 1:
+                Ai = Ai / (N - self.m - 1)
+                A_sum = A_sum + Ai
+
+        self.Bm = 1/(N - self.m) * B_sum
+        self.Am = 1/(N - self.m) * A_sum
+
+        self.sampen = math.log(self.Bm / self.Am)
+        return self.sampen
+
+    # @private
     def __entropyb(self):
         N = len(self.nni)
         X = []
 
         # Get sequences of m matches
-        for i in range(0,N - self.m + 1):
+        for i in range(0, N - self.m + 1):
             X_m_i = self.nni[i:i+self.m]
             X.append(X_m_i)
         X = np.asarray(X)
 
-        B_vector = []
+        B_sum = 0
 
         r = self.__r(self.m)
 
+        B_sum = 0
         for i in range(0, N - self.m):
             Bi = 0
             for j in range(0, N - self.m):
@@ -59,10 +109,9 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
                         Bi = Bi + 1
 
             Bi = Bi / (N - self.m - 1)
-            B_vector.append(Bi)
+            B_sum = B_sum + Bi
 
-        B_vector = np.asarray(B_vector)
-        self.Bm = 1/(N - self.m) * B_vector.sum()
+        self.Bm = 1/(N - self.m) * B_sum
         return self.Bm
 
     # @private
@@ -76,7 +125,7 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
             X.append(X_m_i)
         X = np.asarray(X)
 
-        A_vector = []
+        A_sum = 0
         r= self.__r(self.m + 1)
         for i in range(0, N - self.m - 1):
             Ai = 0
@@ -86,18 +135,16 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
                         Ai = Ai + 1
 
             Ai = Ai / (N - self.m - 1)
-            A_vector.append(Ai)
+            A_sum = A_sum + Ai
 
-        A_vector = np.asarray(A_vector)
-
-        self.Am = 1 / (N - self.m) * A_vector.sum()
+        self.Am = 1 / (N - self.m) * A_sum
 
         return self.Am
 
     # Methods to publicly call
 
-    def get_sampen(self):
-        self.sampen= math.log(self.Bm/self.Am)
+    def get_sampen_backup(self):
+        self.sampen= math.log(self.__entropyb()/self.__entropya())
         return self.sampen
 
     def get_cosen(self):

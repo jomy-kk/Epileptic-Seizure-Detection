@@ -135,7 +135,7 @@ def get_full_baseline(patients):
 
     return baseline_awake
 
-patients = [101, ]
+patients = [101, 102 ]
 crises = [1, 2, 3]
 state = "awake"
 features = get_features_from_patients(patients, crises)
@@ -211,7 +211,7 @@ def inspect_features(features):
             text.set_color('white')
 
     plt.tight_layout()
-    plt.subplots_adjust(wspace=0.4, hspace=0.4)
+    plt.subplots_adjust(wspace=0.6, hspace=0.6)
     plt.show()
 
 

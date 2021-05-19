@@ -80,6 +80,7 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _
                                         features_calculator.get_cosen(),
                                         ))
 
+
     del features_calculator
     return extracted_features
 
@@ -233,9 +234,11 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
         # complete group features
         for i, segment, segment_times in zip(range(len(segmented_nni)), segmented_nni,
                                              segmented_date_time):
+            print(i)
             # group features
             extracted_features = extract_segment_hrv_features(segment, sf, _time=_time, _frequency=_frequency,
-                                                              _pointecare=_pointecare, _katz=_katz, _rqa=_rqa, _cosen=_cosen)
+                                                              _pointecare=_pointecare, _katz=_katz, _rqa=_rqa, _cosen=_cosen,
+                                                              m=m, g=g)
 
             # individual features
             if needed_features is not None:
@@ -263,7 +266,7 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
             # group features
             extracted_features = extract_segment_hrv_features(segment, sf, _time=_time, _frequency=_frequency,
                                                               _pointecare=_pointecare, _katz=_katz, _rqa=_rqa,
-                                                              _cosen=_cosen)
+                                                              _cosen=_cosen, m=m, g=g)
 
             # individual features
             if needed_features is not None:
