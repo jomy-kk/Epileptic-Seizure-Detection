@@ -14,11 +14,14 @@ from _datetime import datetime
 
 import matplotlib.pyplot as plt
 import tkinter as tk
+import pandas as pd
+
 from functools import partial
 from math import sqrt
 
-from src.feature_extraction import get_patient_hrv_features, get_patient_hrv_baseline_features
 
+from src.feature_extraction import get_patient_hrv_features, get_patient_hrv_baseline_features
+from src.feature_selection.utils_signal_processing import *
 
 data_path = './data'
 
@@ -28,7 +31,8 @@ def get_features_from_patients(patients: list, crises: list):
     for patient in patients:
         features = dict()
         for crisis in crises:
-            features[crisis] = get_patient_hrv_features(patient, crisis)
+            features[crisis] = clean_outliers(get_patient_hrv_features(patient, crisis))
+            features[crisis] = normalise_feats(features[crisis])
         res[patient] = features
     return res
 
@@ -36,7 +40,8 @@ def get_baseline_from_patients(patients: list, state : str):
     res = dict()
     for patient in patients:
         features = dict()
-        features[state] = get_patient_hrv_baseline_features(patient, state)
+        features[state] = clean_outliers(get_patient_hrv_baseline_features(patient, state))
+        features[state] = normalise_feats(features[state])
         res[patient] = features
     return res
 
@@ -55,7 +60,6 @@ class Table:
     """
 
     def __init__(self, root, features, checkbox_controls):
-
         # do a header for the table
         header = set()
         for patient in features.values():
@@ -141,6 +145,8 @@ state = "awake"
 features = get_features_from_patients(patients, crises)
 baseline = get_full_baseline(patients)
 
+print(features)
+
 # create root window
 #root = tk.Tk()
 #root.title("Feature Selection")
@@ -174,6 +180,7 @@ def inspect_features(features):
         metadata = json.load(metadata_file)
 
     background_color = (0, 0, 0)
+
     fig = plt.figure(figsize=(20, 20), facecolor=background_color)
     for i in range(n_features):
         ax = plt.subplot(n_subplots_per_side + 1, n_subplots_per_side, i+1, facecolor=background_color)

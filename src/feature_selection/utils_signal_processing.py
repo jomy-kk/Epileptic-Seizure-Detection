@@ -1,6 +1,12 @@
 import numpy as np
 from scipy.stats import pearsonr
 
+def clean_all_outliers(dictionaries : dict, way='q'):
+    for number, patient in dictionaries.items():
+        for crisis_number, crisis in patient.items():
+            dictionaries[number][crisis_number] = clean_outliers(crisis, way)
+
+    return dictionaries
 
 def clean_outliers(templates, way='q'):
     var = templates.var(axis=1)
