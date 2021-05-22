@@ -32,8 +32,11 @@ def get_features_from_patients(patients: list, crises: list):
         features = dict()
         for crisis in crises:
             features[crisis] = clean_outliers(get_patient_hrv_features(patient, crisis))
+            print(features[crisis])
             features[crisis] = normalise_feats(features[crisis])
         res[patient] = features
+
+    print(res)
     return res
 
 def get_baseline_from_patients(patients: list, state : str):
@@ -139,13 +142,11 @@ def get_full_baseline(patients):
 
     return baseline_awake
 
-patients = [101, 102 ]
-crises = [1, 2, 3]
+patients = [101]
+crises = [2]
 state = "awake"
 features = get_features_from_patients(patients, crises)
 baseline = get_full_baseline(patients)
-
-print(features)
 
 # create root window
 #root = tk.Tk()
@@ -183,7 +184,8 @@ def inspect_features(features):
 
     fig = plt.figure(figsize=(20, 20), facecolor=background_color)
     for i in range(n_features):
-        ax = plt.subplot(n_subplots_per_side + 1, n_subplots_per_side, i+1, facecolor=background_color)
+        print(i,"/",n_subplots_per_side,"/",n_features)
+        ax = plt.subplot(n_subplots_per_side + 1, n_subplots_per_side + 1, i+1, facecolor=background_color)
         ax.grid(color='white', linestyle='--', linewidth=0.35)
         feature_label = feature_labels[i]
         plt.title(feature_label, color='white')
@@ -220,7 +222,6 @@ def inspect_features(features):
     plt.tight_layout()
     plt.subplots_adjust(wspace=0.6, hspace=0.6)
     plt.show()
-
 
 inspect_features(features)
 

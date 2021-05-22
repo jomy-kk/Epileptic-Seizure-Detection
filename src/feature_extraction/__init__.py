@@ -30,6 +30,8 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _
     """
     extracted_features = []
 
+    features_calculator = None
+
     if _time:
         features_calculator = TimeFeaturesCalculator(nni_segment, sampling_frequency)
         extracted_features = np.hstack((extracted_features,
@@ -80,8 +82,9 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _
                                         features_calculator.get_cosen(),
                                         ))
 
+    if features_calculator is not None:
+        del features_calculator
 
-    del features_calculator
     return extracted_features
 
 
@@ -119,10 +122,16 @@ def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_fe
     extracted_features = []
     labels = []
 
-    features_calculator = TimeFeaturesCalculator(nni_segment, sampling_frequency)
-    f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
-    extracted_features = np.hstack((extracted_features, f))
-    labels += l
+    features_calculator = None
+
+    if 'nn50' in needed_features or 'pnn50' in needed_features or 'sdnn' in needed_features or \
+        'rmssd' in needed_features or 'mean' in needed_features or 'var' in needed_features or \
+        'hr' in needed_features or 'maxhr' in needed_features:
+
+        features_calculator = TimeFeaturesCalculator(nni_segment, sampling_frequency)
+        f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
+        extracted_features = np.hstack((extracted_features, f))
+        labels += l
 
     features_calculator = FrequencyFeaturesCalculator(nni_segment, sampling_frequency)
     f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
@@ -139,23 +148,29 @@ def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_fe
     extracted_features = np.hstack((extracted_features, f))
     labels += l
 
-    features_calculator = RQAFeaturesCalculator(nni_segment)
-    f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
-    extracted_features = np.hstack((extracted_features, f))
-    labels += l
+    if 'rec' in needed_features or 'det' in needed_features or 'lmax' in needed_features:
+        features_calculator = RQAFeaturesCalculator(nni_segment)
+        f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
+        extracted_features = np.hstack((extracted_features, f))
+        labels += l
 
-    features_calculator = COSenFeaturesCalculator(nni_segment, m, g)
-    f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
-    extracted_features = np.hstack((extracted_features, f))
-    labels += l
+    if 'sampen' in needed_features or 'cosen' in needed_features:
+        features_calculator = COSenFeaturesCalculator(nni_segment, m, g)
+        f, l = __get_hrv_features(features_calculator, needed_features)
+        extracted_features = np.hstack((extracted_features, f))
+        labels += l
 
-    del features_calculator
+    if features_calculator is not None:
+        del features_calculator
+
     return extracted_features
 
 
 def segment_nni_signal(nni_signal, n_samples_segment, n_samples_overlap=0):
     date_time_indexes = list(nni_signal['nni'].keys())
     step = n_samples_segment - n_samples_overlap
+    print("n_samples_segment = ", n_samples_segment, "(", type(n_samples_segment))
+    print("n_samples_overlap = ", n_samples_overlap, "(", type(n_samples_overlap))
     segmented_nni = [nni_signal[i: i + n_samples_segment] for i in range(0, len(nni_signal)-n_samples_segment, step)]
     segmented_date_time = [date_time_indexes[i: i + n_samples_segment] for i in range(0, len(date_time_indexes)-n_samples_segment, step)]
     print("Divided signal into " + str(len(segmented_nni)) + " samples.")
@@ -198,9 +213,15 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
     individual features specified in needed_features.
     """
 
+    if g is not None:
+        g=float(g)
+
+    if m is not None:
+        m=int(m)
+
     sf = src.feature_extraction.io.metadata['sampling_frequency']  # Hz
     n_samples_segment = segment_time * sf
-    n_samples_overlap = segment_overlap_time * sf
+    n_samples_overlap = int(segment_overlap_time * sf)
 
     # Get labels for the features
     labels = []
@@ -217,6 +238,7 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
         labels += list(RQAFeaturesCalculator.labels.values())
     if _cosen:
         labels += list(COSenFeaturesCalculator.labels.values())
+
     # individual features
     if needed_features is not None:
         for f in needed_features:
@@ -234,22 +256,26 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
         # complete group features
         for i, segment, segment_times in zip(range(len(segmented_nni)), segmented_nni,
                                              segmented_date_time):
-            print(i)
+            print("Segment ", i)
             # group features
             extracted_features = extract_segment_hrv_features(segment, sf, _time=_time, _frequency=_frequency,
                                                               _pointecare=_pointecare, _katz=_katz, _rqa=_rqa, _cosen=_cosen,
-                                                              m=m, g=g)
+                                                             m=m, g=g)
 
             # individual features
             if needed_features is not None:
                 extracted_features = np.hstack(
-                    (extracted_features, extract_segment_some_hrv_features(segment, sf, needed_features)))
+                    (extracted_features, extract_segment_some_hrv_features(segment, sf, needed_features, m=m, g=g)))
 
+            print("Printing")
+            print("Extracted: ", extracted_features)
+            print("Features: ", features)
             features.loc[i] = extracted_features  # add a line
             t = segment_times[0] + ((segment_times[-1] - segment_times[0]) / 2)  # time in the middle of the segment
             features = features.rename({i: t}, axis='index')
 
         if _save:
+            print("Saving")
             src.feature_extraction.io.__save_crisis_hrv_features(patient, crisis, features)
 
         return features
@@ -271,7 +297,7 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
             # individual features
             if needed_features is not None:
                 extracted_features = np.hstack(
-                    (extracted_features, extract_segment_some_hrv_features(segment, sf, needed_features)))
+                    (extracted_features, extract_segment_some_hrv_features(segment, sf, needed_features,m=m,g=g)))
 
             features.loc[i] = extracted_features  # add a line
             t = segment_times[0] + ((segment_times[-1] - segment_times[0]) / 2)  # time in the middle of the segment
@@ -323,7 +349,8 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
                 else:
                     print("Returning the features founded.")
                     features_set[crisis] = features
-
+            else:
+                features_set[crisis] = __extract_crisis_hrv_features(patient, crisis)
         return features_set
 
     elif isinstance(crises, int):
@@ -334,8 +361,11 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
                 print("Recomputing...")
                 return __extract_crisis_hrv_features(patient, crises)
             else:
-                print("Returning the features founded.")
+                print("Returning the features found.")
                 return features
+
+        else:
+            return __extract_crisis_hrv_features(patient, crises)
 
     else:
         raise Exception("'crises' should be an integer (for 1 crisis extraction), a list of integers (for multiple "
@@ -369,10 +399,11 @@ def get_patient_hrv_features(patient: int, crisis: int):
     """
     features = src.feature_extraction.io.__read_crisis_hrv_features(patient, crisis)
 
-    if features is None:  # HDF not found, compute the features
+    if features is None:  # HDF not found, compute the feature<s
         if input(
                 "The HRV features for this patient/crisis pair were never computed before. Would you like to compute them now? y/n").lower() == 'y':
             segment_seconds = input("Seconds per segment = ")
+            segment_overlap_time = int(input("Segment overlap = "))
             needed_features = input("Which features to compute (separated by spaces, or 'all') = ")
             if needed_features == 'all':
                 needed_features = None
@@ -388,15 +419,45 @@ def get_patient_hrv_features(patient: int, crisis: int):
                     break
 
             print("Extracting features...")
-            features = extract_patient_hrv_features(int(segment_seconds), patient, crisis, m=m, g=g,
-                                                    needed_features=needed_features, _save=True)
+            features = np.hstack(features,extract_patient_hrv_features(int(segment_seconds), patient, crisis, segment_overlap_time=segment_overlap_time, m=m, g=g,
+                                                    needed_features=needed_features, _save=True))
             print("Feature extraction saved.")
             return features
 
         else:
             return None
     else:
-        return features
+        if input(
+                "Add new features? y/n").lower() == 'y':
+            segment_seconds = input("Seconds per segment = ")
+            segment_overlap_time = int(input("Segment overlap = "))
+            needed_features = input("Which features to compute (separated by spaces, or 'all') = ")
+            if needed_features == 'all':
+                needed_features = None
+            else:
+                needed_features = needed_features.split(sep=' ')
+
+                for feature in needed_features:
+                    if feature in features.columns:
+                        features = features.drop(feature,axis=1)
+
+            m, g = None, None
+
+            for f in COSenFeaturesCalculator.labels:
+                if (needed_features is None) or (f in needed_features):  # meio que estupido, mas reduz o codigo xD
+                    m = input("For the COSen features, give a m: ")
+                    g = input("For the COSen features, give a g: ")
+                    break
+
+            print("Extracting features...")
+            features = pd.concat([features,extract_patient_hrv_features(int(segment_seconds), patient, crisis, segment_overlap_time=segment_overlap_time, m=m, g=g,
+                                                    needed_features=needed_features, _save=True)],axis=1)
+
+            src.feature_extraction.io.__save_crisis_hrv_features(patient, crisis, features)
+            print("Feature extraction saved.")
+            return features
+        else:
+            return features
 
 def get_patient_hrv_baseline_features(patient: int, state: str):
     """
