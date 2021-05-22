@@ -32,6 +32,7 @@ def get_features_from_patients(patients: list, crises: list):
         features = dict()
         for crisis in crises:
             features[crisis] = clean_outliers(get_patient_hrv_features(patient, crisis))
+            print(features[crisis].keys())
             print(features[crisis])
             features[crisis] = normalise_feats(features[crisis])
         res[patient] = features
@@ -143,7 +144,7 @@ def get_full_baseline(patients):
     return baseline_awake
 
 patients = [101]
-crises = [2]
+crises = [1]
 state = "awake"
 features = get_features_from_patients(patients, crises)
 baseline = get_full_baseline(patients)

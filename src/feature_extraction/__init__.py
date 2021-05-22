@@ -129,28 +129,28 @@ def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_fe
         'hr' in needed_features or 'maxhr' in needed_features:
 
         features_calculator = TimeFeaturesCalculator(nni_segment, sampling_frequency)
-        f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
+        f, l = __get_hrv_features(features_calculator, needed_features)
         extracted_features = np.hstack((extracted_features, f))
         labels += l
 
     features_calculator = FrequencyFeaturesCalculator(nni_segment, sampling_frequency)
-    f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
+    f, l = __get_hrv_features(features_calculator, needed_features)
     extracted_features = np.hstack((extracted_features, f))
     labels += l
 
     features_calculator = PointecareFeaturesCalculator(nni_segment)
-    f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
+    f, l = __get_hrv_features(features_calculator, needed_features)
     extracted_features = np.hstack((extracted_features, f))
     labels += l
 
     features_calculator = KatzFeaturesCalculator(nni_segment)
-    f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
+    f, l = __get_hrv_features(features_calculator, needed_features)
     extracted_features = np.hstack((extracted_features, f))
     labels += l
 
     if 'rec' in needed_features or 'det' in needed_features or 'lmax' in needed_features:
         features_calculator = RQAFeaturesCalculator(nni_segment)
-        f, l = extracted_features, __get_hrv_features(features_calculator, needed_features)
+        f, l = __get_hrv_features(features_calculator, needed_features)
         extracted_features = np.hstack((extracted_features, f))
         labels += l
 
@@ -267,9 +267,6 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
                 extracted_features = np.hstack(
                     (extracted_features, extract_segment_some_hrv_features(segment, sf, needed_features, m=m, g=g)))
 
-            print("Printing")
-            print("Extracted: ", extracted_features)
-            print("Features: ", features)
             features.loc[i] = extracted_features  # add a line
             t = segment_times[0] + ((segment_times[-1] - segment_times[0]) / 2)  # time in the middle of the segment
             features = features.rename({i: t}, axis='index')
