@@ -34,6 +34,7 @@ def __read_crisis_nni(patient: int, crisis: int):
         print("Data from " + file_path + " was retrieved.")
         return data
     except IOError:
+        file_path = '/' + str(patient) + '/nni_crisis_' + str(crisis)
         print("That patient/crisis pair does not exist. None was returned.")
         return None
 
@@ -47,7 +48,7 @@ def __read_baseline_nni(patient: int, state: str):
         print("Data from " + file_path + " was retrieved.")
         return data
     except IOError:
-        print("That patient/crisis pair does not exist. None was returned.")
+        print("That patient/baseline pair does not exist. None was returned.")
         return None
 
 
@@ -59,7 +60,7 @@ def __save_crisis_hrv_features(patient: int, crisis: int, features: pd.DataFrame
         features.to_hdf(data_path + file_path, 'features', mode='a')
         print("Written in " + file_path + " was successful.")
     except IOError:
-        print("That patient/crisis pair cannot be created. Save failed.")
+        print("That patient/baseline pair cannot be created. Save failed.")
 
 
 def __save_baseline_hrv_features(patient: int, state: str, features: pd.DataFrame):
@@ -80,6 +81,9 @@ def __read_crisis_hrv_features(patient: int, crisis: int):
         file_path = '/' + str(patient) + '/hrv_crisis_' + str(crisis)
         data = pd.read_hdf(data_path + file_path)
         print("Data from " + file_path + " was retrieved.")
+
+        print("Data",data)
+
         return data
     except IOError:  # HDF not found, return None
         return None

@@ -30,6 +30,7 @@ def normalise_feats(features, norm='minmax'):
         return (features - features.mean()) / (features.std())
 
     elif norm == 'minmax':
+        print(features)
         return (features - features.min()) / (features.max() - features.min())
 
 

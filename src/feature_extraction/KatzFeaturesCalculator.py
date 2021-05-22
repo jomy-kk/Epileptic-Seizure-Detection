@@ -17,7 +17,8 @@ class KatzFeaturesCalculator(HRVFeaturesCalculator):
 
     def get_katz_fractal_dim(self):
         if not hasattr(self, 'katz_fractal_dim'):
-            d_kfd = np.max([((1 - j) ** 2 + (self.nni[1] - self.nni[j]) ** 2) ** 0.5 for j in range(len(self.nni))])
-            l_kfd = np.sum([(1 + (self.nni[i] - self.nni[i + 1]) ** 2) ** 0.5 for i in range(len(self.nni) - 1)])
+            for j in range(len(self.nni)):
+                d_kfd = np.max([((1 - j) ** 2 + (self.nni.iloc[0,0] - self.nni.iloc[j,0]) ** 2) ** 0.5 for j in range(len(self.nni))])
+                l_kfd = np.sum([(1 + (self.nni.iloc[i,0] - self.nni.iloc[i + 1,0]) ** 2) ** 0.5 for i in range(len(self.nni) - 1)])
             self.katz_fractal_dim = math.log10(l_kfd) / math.log10(d_kfd)
         return self.katz_fractal_dim

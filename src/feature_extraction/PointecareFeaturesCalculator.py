@@ -27,7 +27,7 @@ class PointecareFeaturesCalculator(HRVFeaturesCalculator):
         return self.sd1
 
     def get_csi(self):
-        return self.get_sd2() / self.get_sd1()
+        return self.sd2 / self.sd1
 
     def get_csv(self):
         if not hasattr(self, 'csv'):

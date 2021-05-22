@@ -32,20 +32,17 @@ def get_features_from_patients(patients: list, crises: list):
         features = dict()
         for crisis in crises:
             features[crisis] = clean_outliers(get_patient_hrv_features(patient, crisis))
-            print(features[crisis].keys())
-            print(features[crisis])
             features[crisis] = normalise_feats(features[crisis])
         res[patient] = features
-
-    print(res)
     return res
 
 def get_baseline_from_patients(patients: list, state : str):
     res = dict()
     for patient in patients:
         features = dict()
-        features[state] = clean_outliers(get_patient_hrv_baseline_features(patient, state))
-        features[state] = normalise_feats(features[state])
+        for state in state:
+            features[state] = clean_outliers(get_patient_hrv_baseline_features(patient, state))
+            features[state] = normalise_feats(features[state])
         res[patient] = features
     return res
 
@@ -70,6 +67,9 @@ class Table:
             for crisis in patient.values():
                 for feature in crisis.columns:
                     header.add(feature)
+            #if baseline:
+                #for feature in state.columns:
+                    #header.add('baseline'+ feature)
         self.feature_labels = list(header)
 
         # initialize checkbox control variables
@@ -131,23 +131,23 @@ class Table:
             for c in p.values():
                 c[f].set(new_value)
 
-def get_full_baseline(patients):
-    baseline_awake = get_baseline_from_patients(patients, "awake")
-    baseline_asleep = get_baseline_from_patients(patients, "asleep")
+#def get_full_baseline(patients):
+    #baseline_awake = get_baseline_from_patients(patients, "awake")
+    #baseline_asleep = get_baseline_from_patients(patients, "asleep")
 
-    for patient in patients:
-        if baseline_awake[patient] is not None:
-            if baseline_asleep[patient] is not None:
-                baseline_awake[patient].update(baseline_asleep[patient])
+    #for patient in patients:
+        #if baseline_awake[patient] is not None:
+            #if baseline_asleep[patient] is not None:
+                #baseline_awake[patient].update(baseline_asleep[patient])
 
 
-    return baseline_awake
+    #return baseline_awake
 
 patients = [101]
 crises = [1]
 state = "awake"
 features = get_features_from_patients(patients, crises)
-baseline = get_full_baseline(patients)
+#baseline = get_full_baseline(patients)
 
 # create root window
 #root = tk.Tk()
@@ -182,6 +182,11 @@ def inspect_features(features):
         metadata = json.load(metadata_file)
 
     background_color = (0, 0, 0)
+    rolling_avg = False
+    if input("Do you want to do rolling average? y/n ").lower() == 'y':
+        rolling_avg = True
+        n_avg = int(input("Number of points around each point for rolling average: "))
+
 
     fig = plt.figure(figsize=(20, 20), facecolor=background_color)
     for i in range(n_features):
@@ -211,8 +216,19 @@ def inspect_features(features):
          #   for c in features[p].keys():
           #      if feature_label in features[p][c].keys():
                     feature = features[p][c][feature_label]
-                    plt.plot(time_axis, feature.values, '.', label=str(p)+'/'+str(c), markersize=1.2, alpha=0.7)  # .values discards time axis
-                    plt.xlabel('time', color='white')
+                    feature_rolling = features[p][c][feature_label]
+                    if not rolling_avg:
+                        plt.plot(time_axis, feature.values, '.', label=str(p) + '/' + str(c), markersize=1.2,
+                                 alpha=0.7)  # .values discards time axis
+                        plt.xlabel('time', color='white')
+                    else:
+                        for j in range(len(feature) - 2 * n_avg):
+                            feature_rolling[j + n_avg] = feature.values[j:j+n_avg*2].mean()
+
+                        # Tendency line
+                        plt.plot(time_axis, feature_rolling.values, '-', label=str(p)+'/'+str(c), markersize=1.2, alpha=0.7)  # .values discards time axis
+
+                        plt.xlabel('time', color='white')
 
         # draw onset vertical line
         plt.axvline(x=reference_onset, color='red', linewidth=0.4)

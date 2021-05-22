@@ -16,7 +16,12 @@ class FrequencyFeaturesCalculator(HRVFeaturesCalculator):
 
     #@private
     def __spectral_density(self):
-        self.frequency_dist, self.power_dist = welch(self.nni, fs=self.sf, scaling='density')
+        nni_flat = []
+
+        for value in self.nni.values:
+            nni_flat.append(value[0])
+
+        self.frequency_dist, self.power_dist = welch(nni_flat, fs=self.sf, scaling='density')
         self.total_power = np.sum(self.power_dist)
 
     def get_lf(self):

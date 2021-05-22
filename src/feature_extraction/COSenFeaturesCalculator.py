@@ -38,51 +38,47 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
 
     # @private
     def get_sampen(self):
-        N = len(self.nni)
-        Xa = []
-        Xb = []
+        if not hasattr(self,'sampen'):
+            N = len(self.nni)
+            Xa = []
+            Xb = []
 
-        # Get sequences of m matches
-        for i in range(0, N - self.m + 1):
-            X_m_i_b = self.nni[i:i+self.m]
-            Xb.append(X_m_i_b)
+            # Get sequences of m matches
+            for i in range(0, N - self.m + 1):
+                X_m_i_b = self.nni[i:i+self.m]
+                Xb.append(X_m_i_b)
 
-            if i < N - self.m:
-                X_m_i_a = self.nni[i:i+self.m+1]
-                Xa.append(X_m_i_a)
+                if i < N - self.m:
+                    X_m_i_a = self.nni[i:(i+self.m+1)]
+                    Xa.append(X_m_i_a)
+            Xb = np.asarray(Xb)
+            Xa = np.asarray(Xa)
+            B_sum = 0
+            A_sum = 0
 
-        Xb = np.asarray(Xb)
-        Xa = np.asarray(Xa)
+            ra= self.__r(self.m + 1)
+            rb= self.__r(self.m)
 
-        B_sum = 0
-        A_sum = 0
+            for i in range(0, N - self.m):
+                Bi = 0
+                Ai = 0
+                for j in range(0, N - self.m):
+                    if j != i:
+                        if self.__distance(Xb, i, j) <= rb:
+                            Bi = Bi + 1
+                        if i < N - self.m - 1 and j < N - self.m - 1:
+                            if self.__distance(Xa, i, j) <= ra:
+                                Ai = Ai + 1
 
-        ra= self.__r(self.m + 1)
-        rb= self.__r(self.m)
-
-        for i in range(0, N - self.m):
-            Bi = 0
-            Ai = 0
-            for j in range(0, N - self.m):
-                if j != i:
-                    if self.__distance(Xb, i, j) <= rb:
-                        Bi = Bi + 1
-
-                    if i < N - self.m - 1 and j < N - self.m - 1:
-                        if self.__distance(Xa, i, j) <= ra:
-                            Ai = Ai + 1
-
-            Bi = Bi / (N - self.m - 1)
-            B_sum = B_sum + Bi
-
-            if i <= N - self.m - 1:
+                Bi = Bi / (N - self.m - 1)
+                B_sum = B_sum + Bi
+                #if i <= N - self.m - 1:
                 Ai = Ai / (N - self.m - 1)
                 A_sum = A_sum + Ai
 
-        self.Bm = 1/(N - self.m) * B_sum
-        self.Am = 1/(N - self.m) * A_sum
-
-        self.sampen = math.log(self.Bm / self.Am)
+            self.Bm = 1/(N - self.m) * B_sum
+            self.Am = 1/(N - self.m) * A_sum
+            self.sampen = math.log(self.Bm / self.Am)
         return self.sampen
 
     # @private
@@ -148,6 +144,6 @@ class COSenFeaturesCalculator(HRVFeaturesCalculator):
         return self.sampen
 
     def get_cosen(self):
-        self.cosen= self.sampen + math.log(2 * self.__r(self.m)) - math.log(self.nni.mean())
+        self.cosen= self.get_sampen() + math.log(2 * self.__r(self.m)) - math.log(self.nni.mean())
         return self.cosen
 

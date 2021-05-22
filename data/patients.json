@@ -1,7 +1,7 @@
 {
   "name": "patients",
   "version": "1.0.0",
-  "sampling_frequency": 128,
+  "sampling_frequency": 4,
 
   "patients": {
     "101": {

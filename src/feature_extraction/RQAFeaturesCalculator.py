@@ -22,7 +22,7 @@ class RQAFeaturesCalculator(HRVFeaturesCalculator):
             self.rr = np.zeros((len(self.nni), len(self.nni)))
             for i in range(len(self.nni)):
                 for j in range(len(self.nni)):
-                    self.rr[i, j] = abs(self.nni[j] - self.nni[i])
+                    self.rr[i, j] = abs(self.nni.iloc[j,0] - self.nni.iloc[i,0])
             self.rr = np.heaviside((self.rr.mean() - self.rr), 0.5)
         return self.rr
 
