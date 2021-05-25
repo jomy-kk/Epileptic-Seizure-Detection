@@ -35,9 +35,10 @@ def normalise_feats(features, norm='minmax'):
 
 
 def correlation_feats(features, th=0.99):
+
     fcorr = features.corr('pearson') >= th
 
-    idx = np.argwhere(fcorr.get_values() == True)
+    idx = np.argwhere(fcorr.to_numpy() == True)
     corr_idx = idx[np.argwhere(idx[:, 0] != idx[:, 1])]
 
     idx_ = corr_idx.reshape(-1, 2)[:, 1][:len(corr_idx) // 2]

@@ -33,6 +33,7 @@ def get_features_from_patients(patients: list, crises: list):
         for crisis in crises:
             features[crisis] = clean_outliers(get_patient_hrv_features(patient, crisis))
             features[crisis] = normalise_feats(features[crisis])
+            features[crisis] = correlation_feats(features[crisis], th=0.99)
         res[patient] = features
     return res
 
@@ -143,8 +144,8 @@ class Table:
 
     #return baseline_awake
 
-patients = [101]
-crises = [1,2,3]
+patients = [103]
+crises = [1,2,3,4,5,6]
 state = "awake"
 features = get_features_from_patients(patients, crises)
 #baseline = get_full_baseline(patients)

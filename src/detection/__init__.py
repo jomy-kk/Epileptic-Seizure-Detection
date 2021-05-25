@@ -22,13 +22,13 @@ def create_dataset (features:dict):
     #dataset_X, dataset_Y = {}, {}
     dataset_x, dataset_y = [], []
     onsets = {}
-    feature_label=['rms_sd', 'sd_nn', 'mean_nn', 'lf_pwr', 'hf_pwr', 'kfd', 'sampen',
-       'cosen', 'lf', 'hf', 'lf_hf', 'hf_lf', 'katz_fractal_dim', 'sd1', 'sd2',
+    feature_label=['sampen',
+       'cosen', 'lf', 'hf', 'lf_hf', 'hf_lf',  'sd1', 'sd2',
        'csi', 'csv', 's', 'rec', 'det', 'lmax', 'nn50', 'pnn50', 'sdnn',
-       'rmssd', 'mean', 'var', 'hr', 'maxhr']
+       'rmssd', 'mean', 'var', 'hr', 'maxhr', 'katz_fractal_dim']
 
-    before_onset_minutes = int(input("How many minutes of pre-ictal phase before crisis onset?"))
-    crisis_minutes = int(input("How many minutes does the crisis last?"))
+    before_onset_minutes = int(input("How many minutes of pre-ictal phase before crisis onset?")) # 15 min
+    crisis_minutes = int(input("How many minutes does the crisis last?")) # 3 min
 
     for patient in features.keys():
         onsets[patient] = {}
@@ -114,7 +114,7 @@ def read_best_params():
 
 def train_test_svm (features):
     dataset_x, dataset_y = create_dataset(features)
-    test_size = float(input("What size do you want the test sample to have (0-1)?"))
+    test_size = float(input("What size do you want the test sample to have (0-1)?"))  #Using 0.2
     x_train, x_test, y_train, y_test = train_test_split(dataset_x, dataset_y, test_size=test_size)
     ns=len(y_train)
     ns0=y_train.count(0)
@@ -124,7 +124,7 @@ def train_test_svm (features):
         # defining parameter range
 
 
-        param_grid = {'C': [20,25,30],
+        param_grid = {'C': [10,20],
                       'gamma': [0.001,0.01,0.1,1],
                       'kernel': ['rbf'], 'class_weight':[{0: ns/(2*ns0), 1: ns/(2*ns1)}] }
 
@@ -166,6 +166,15 @@ def train_test_svm (features):
 
     # print classification report
     print(classification_report(y_test,y_prediction))
+    #cm = confusion_matrix(y_test, y_prediction)
+    #cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+    #print('Accuracy scores:', cm.diagonal())
+    cm = confusion_matrix(y_test, y_prediction, labels=[1,0])
+    print('Confusion matrix : \n', cm)
+    tp, fn, fp, tn = confusion_matrix(y_test, y_prediction, labels=[1,0]).reshape(-1)
+    print('Outcome values : \n', 'true positive:', tp, 'false negative:',fn, 'false positive:', fp, 'true negative:', tn)
+    print('False positive rate:', fp/(fp+tn))
+
     return y_prediction
 
 
