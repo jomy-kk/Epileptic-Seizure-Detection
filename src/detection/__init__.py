@@ -72,7 +72,7 @@ def create_dataset (features:dict):
                 dataset_x += features[patient][crisis].to_numpy().tolist()[n_samples_interictal_before:(n_samples_interictal_before + n_samples_preictal)]
 
                 # Subset 'ictal phase':
-                dataset_y += [2] * n_samples_ictal
+                dataset_y += [1] * n_samples_ictal
                 dataset_x += features[patient][crisis].to_numpy().tolist()[
                              (n_samples_interictal_before + n_samples_preictal):(n_samples_interictal_before + n_samples_preictal + n_samples_ictal)]
 
@@ -116,14 +116,23 @@ def train_test_svm (features):
     dataset_x, dataset_y = create_dataset(features)
     test_size = float(input("What size do you want the test sample to have (0-1)?"))
     x_train, x_test, y_train, y_test = train_test_split(dataset_x, dataset_y, test_size=test_size)
-
-    def hyperparameter_tuning (x_train, y_train, x_test, y_test):
+    ns=len(y_train)
+    ns0=y_train.count(0)
+    ns1= y_train.count(1)
+    ns2 = y_train.count(2)
+    def hyperparameter_tuning (x_train, y_train, x_test, y_test, ns=ns, ns0=ns0, ns1=ns1, ns2=ns2):
         # defining parameter range
-        param_grid = {'C': np.arange(0.1,1,0.1).tolist() + np.arange(1,10,1).tolist() + np.arange(10,100,10).tolist() + np.arange(100,1000,100).tolist(),
-                      'gamma': np.arange(1, 0.1, -0.1).tolist() + np.arange(0.1,0.01,-0.01).tolist() + np.arange(0.01, 0.001,-0.001).tolist() + np.arange(0.001,0.0001,-0.0001).tolist(),
-                      'kernel': ['rbf', 'poly', 'linear','sigmoid'], 'degree': np.arange(1,5,1).tolist()}
 
-        grid = GridSearchCV(SVC(), param_grid, refit=True, verbose=3)
+
+        param_grid = {'C': [20,25,30],
+                      'gamma': [0.001,0.01,0.1,1],
+                      'kernel': ['rbf'], 'class_weight':[{0: ns/(2*ns0), 1: ns/(2*ns1)}] }
+
+        #param_grid = {'C': [0.1, 1, 10],
+                      #'gamma': [0.001, 0.01, 0.1, 1],
+                      #'kernel': ['rbf', 'poly', 'linear', 'sigmoid'], 'degree': np.arange(1, 3, 1).tolist(),
+                      #'class_weight': [{0: ns / (2 * ns0), 1: ns / (2 * ns1)}]}
+        grid = GridSearchCV(SVC(), param_grid, refit=True, verbose=3, scoring= 'f1_weighted', cv=5)
         grid_best_params = grid
 
         # fitting the model for grid search
@@ -143,6 +152,7 @@ def train_test_svm (features):
     if parameters is None or input('Do you want to recalculate best parameters? y/n ').lower() == 'y':
         print("Calculating best parameters.")
         best_params = hyperparameter_tuning(x_train, y_train, x_test, y_test)
+
         print("Saving best parameters.")
         parameters = {'C': best_params.best_estimator_.C, 'degree': best_params.best_estimator_.degree,
                       'kernel': best_params.best_estimator_.kernel, 'gamma': best_params.best_estimator_.gamma}

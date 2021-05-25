@@ -144,7 +144,7 @@ class Table:
     #return baseline_awake
 
 patients = [101]
-crises = [1]
+crises = [1,2,3]
 state = "awake"
 features = get_features_from_patients(patients, crises)
 #baseline = get_full_baseline(patients)
