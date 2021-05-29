@@ -26,14 +26,41 @@ from src.feature_selection.utils_signal_processing import *
 data_path = './data'
 
 
-def get_features_from_patients(patients: list, crises: list):
+def get_features_from_patients(patients: list, crises: list, state:str):
     res = dict()
     for patient in patients:
         features = dict()
+        toDrop = None
         for crisis in crises:
+            print('crisis ', crisis)
+            #print('bas', get_patient_hrv_baseline_features(patient,state))
             features[crisis] = clean_outliers(get_patient_hrv_features(patient, crisis))
-            features[crisis] = normalise_feats(features[crisis])
-            features[crisis] = correlation_feats(features[crisis], th=0.99)
+            baseline = get_patient_hrv_baseline_features(patient, state)
+            features[crisis] = normalise_feats_baseline(features[crisis], baseline)
+            #features[crisis] = correlation_feats(features[crisis], th=0.99)
+
+            idx_to_drop = correlation_feats(features[crisis], th=0.99)
+
+            # First crisis to be computed: get features that we want to drop and store them in toDrop
+            if toDrop is None:
+                toDrop = idx_to_drop
+                print('first', toDrop)
+
+            # Next crises: new set of crises to drop is in idx_to_drop.
+            # toDrop becomes the intersection of the previous set of features to drop and the new set.
+            else:
+                print('idx', idx_to_drop )
+                toDrop = [index for index in toDrop if index in idx_to_drop]
+                print('todrop', toDrop)
+
+        # At this point we have call the features that we want to drop in toDrop
+        for crisis in crises:
+            print('Type: ', type(toDrop))
+            print('ToDrop: ', toDrop)
+            print(crisis, 'Before: ', features[crisis])
+            features[crisis] = features[crisis].drop(columns=features[crisis].columns[toDrop])
+            print('After', features[crisis])
+
         res[patient] = features
     return res
 
@@ -144,10 +171,10 @@ class Table:
 
     #return baseline_awake
 
-patients = [103]
-crises = [1,2,3,4,5,6]
+patients = [102]
+crises = [1,3,4]
 state = "awake"
-features = get_features_from_patients(patients, crises)
+features = get_features_from_patients(patients, crises, 'asleep')
 #baseline = get_full_baseline(patients)
 
 # create root window

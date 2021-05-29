@@ -1,5 +1,6 @@
 import json
 import pandas as pd
+import pickle
 
 data_path = './data'
 
@@ -100,3 +101,43 @@ def __read_baseline_hrv_features(patient: int, state: str):
     except IOError:  # HDF not found, return None
         return None
 
+def __save_model(model, patient : int):
+    try:
+        file_path = data_path + '/model_' + str(patient) + '.p'
+        pickle.dump(model, open(file_path,'wb'))
+        print("Written in " + file_path + " was successful.")
+    except IOError:
+        print("Model could not be saved. Save failed.")
+
+def __load_model(patient:int):
+    try:
+        file_path = data_path + '/model_' + str(patient) + '.p'
+        model = pickle.load(open(file_path, 'rb'))
+        print("Loaded model from " + file_path + " successfully.")
+        return model
+    except IOError:
+        print("Model could not be loaded.")
+        return None
+
+def __save_labels(labels, patient:int):
+    try:
+        file_path = data_path + '/labels_' + str(patient) + '.json'
+        file = open(file_path, 'w')
+        json.dump(labels, file)
+        print("Labels saved to " + file_path + " successfully.")
+    except IOError:
+        print("Cannot write labels to file. Save failed.")
+
+def __read_labels(patient:int):
+    try:  # try to read a previously computed JSON file with best parameters
+        file_path = data_path + '/labels_' + str(patient) + '.json'
+        file = open(file_path, 'r')
+        labels = json.load(file)
+
+        print("Data from " + file_path + " was retrieved.")
+
+        print("Labels: ", labels)
+
+        return labels
+    except IOError:  # Parameters not found, return None
+        return None

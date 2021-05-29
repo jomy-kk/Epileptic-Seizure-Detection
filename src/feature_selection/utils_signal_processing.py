@@ -33,14 +33,27 @@ def normalise_feats(features, norm='minmax'):
         print(features)
         return (features - features.min()) / (features.max() - features.min())
 
+def normalise_feats_baseline(features, baseline, norm='minmax'):
+    if norm == 'stand':
+        return (features - baseline.mean()) / (baseline.std())
+
+    elif norm == 'minmax':
+        print(features)
+        return (features - baseline.min()) / (baseline.max() - baseline.min())
+
 
 def correlation_feats(features, th=0.99):
 
     fcorr = features.corr('pearson') >= th
 
+    #print('Fcorr', fcorr)
+
     idx = np.argwhere(fcorr.to_numpy() == True)
+    #print('Fcorr_idx', idx)
     corr_idx = idx[np.argwhere(idx[:, 0] != idx[:, 1])]
 
     idx_ = corr_idx.reshape(-1, 2)[:, 1][:len(corr_idx) // 2]
 
-    return features.drop(columns=features.columns[idx_])
+    print('Returning ', idx_)
+    return idx_
+    #return features.drop(columns=features.columns[idx_])
