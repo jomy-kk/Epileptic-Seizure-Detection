@@ -81,6 +81,7 @@ def extract_segment_hrv_features(nni_segment, sampling_frequency, _time=False, _
                                         features_calculator.get_sampen(),
                                         features_calculator.get_cosen(),
                                         ))
+
     if features_calculator is not None:
         del features_calculator
 
@@ -114,7 +115,7 @@ def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_fe
             assert isinstance(needed_feature, str)
             if hasattr(calculator, 'get_' + needed_feature):
                 features.append(getattr(calculator, 'get_' + needed_feature)())
-                #labels.append(calculator.labels[needed_feature])
+                # labels.append(calculator.labels[needed_feature])
                 labels.append(needed_feature)
         return features, labels
 
@@ -127,7 +128,6 @@ def extract_segment_some_hrv_features(nni_segment, sampling_frequency, needed_fe
     if 'nn50' in needed_features or 'pnn50' in needed_features or 'sdnn' in needed_features or \
             'rmssd' in needed_features or 'mean' in needed_features or 'var' in needed_features or \
             'hr' in needed_features or 'maxhr' in needed_features:
-
         features_calculator = TimeFeaturesCalculator(nni_segment, sampling_frequency)
         f, l = __get_hrv_features(features_calculator, needed_features)
         extracted_features = np.hstack((extracted_features, f))
@@ -174,26 +174,35 @@ def segment_nni_signal(nni_signal, n_samples_segment, n_samples_overlap=0):
     step = n_samples_segment - n_samples_overlap
     print("n_samples_segment = ", n_samples_segment, "(", type(n_samples_segment))
     print("n_samples_overlap = ", n_samples_overlap, "(", type(n_samples_overlap))
-    segmented_nni = [nni_signal[i: i + n_samples_segment] for i in range(0, len(nni_signal)-n_samples_segment, step)]
-    segmented_date_time = [date_time_indexes[i: i + n_samples_segment] for i in range(0, len(date_time_indexes)-n_samples_segment, step)]
+    segmented_nni = [nni_signal[i: i + n_samples_segment] for i in range(0, len(nni_signal) - n_samples_segment, step)]
+    segmented_date_time = [date_time_indexes[i: i + n_samples_segment] for i in
+                           range(0, len(date_time_indexes) - n_samples_segment, step)]
     print("Divided signal into " + str(len(segmented_nni)) + " samples.")
     assert len(segmented_nni) == len(segmented_date_time)
     return segmented_nni, segmented_date_time
 
 
-def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, state=None, segment_overlap_time=0,
-                                 _time=False, _frequency=False, _pointecare=False, _katz=False, _rqa=False, _cosen=False,
+def extract_patient_hrv_features(patient: int, crises=None, baseline=False, state="awake",
+                                 segment_time=15, segment_overlap_time=0,
+                                 _time=False, _frequency=False, _pointecare=False, _katz=False, _rqa=False,
+                                 _cosen=False,
                                  m=None, g=None,
                                  needed_features: list = None,
                                  _save=True):
     """
     Extracts features of some or all crises of a given patient.
 
-    :param segment_time: Integer number of seconds for each segment.
     :param patient: Integer number of the patient.
     :param crises: Integer number of the crisis of the patient, or
                     a list of integers of multiple crises of the patient, or
                     None to extract features of all crises of the patient.
+    :param baseline: Pass as true to additionally extract features of the corresponding baseline file.
+                     Also specify :param state.
+    :param state: Patient state when acquiring the baseline file. Should be "awake" or "asleep".
+                  Parameter only valid if :param baseline = True.
+
+    :param segment_time: Integer number of seconds for each segment.
+    :param segment_overlap_time: Integer number of seconds of overlap between segments.
 
     :param _time: Pass as True to compute all time domain features.
     :param _frequency: Pass as True to compute all frequency domain features.
@@ -217,10 +226,10 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
     """
 
     if g is not None:
-        g=float(g)
+        g = float(g)
 
     if m is not None:
-        m=int(m)
+        m = int(m)
 
     sf = src.feature_extraction.io.metadata['sampling_frequency']  # Hz
     n_samples_segment = segment_time * sf
@@ -254,7 +263,8 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
     # Auxiliary procedure
     def __extract_crisis_hrv_features(patient, crisis):
         nni_signal = src.feature_extraction.io.__read_crisis_nni(patient, crisis)
-        segmented_nni, segmented_date_time = segment_nni_signal(nni_signal, n_samples_segment, n_samples_overlap=n_samples_overlap)
+        segmented_nni, segmented_date_time = segment_nni_signal(nni_signal, n_samples_segment,
+                                                                n_samples_overlap=n_samples_overlap)
         features = pd.DataFrame(columns=labels)
 
         # complete group features
@@ -263,7 +273,8 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
             print("Segment ", i)
             # group features
             extracted_features = extract_segment_hrv_features(segment, sf, _time=_time, _frequency=_frequency,
-                                                               _pointecare=_pointecare, _katz=_katz, _rqa=_rqa, _cosen=_cosen,
+                                                              _pointecare=_pointecare, _katz=_katz, _rqa=_rqa,
+                                                              _cosen=_cosen,
                                                               m=m, g=g)
 
             # individual features
@@ -286,76 +297,60 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
         nni_signal = src.feature_extraction.io.__read_baseline_nni(patient, state)
         segmented_nni, segmented_date_time = segment_nni_signal(nni_signal, n_samples_segment,
                                                                 n_samples_overlap=n_samples_overlap)
-        baseline_features = pd.DataFrame(columns=labels)
+        features = pd.DataFrame(columns=labels)
 
         # complete group features
         for i, segment, segment_times in zip(range(len(segmented_nni)), segmented_nni,
                                              segmented_date_time):
-            print("Segment ", i)
             # group features
             extracted_features = extract_segment_hrv_features(segment, sf, _time=_time, _frequency=_frequency,
                                                               _pointecare=_pointecare, _katz=_katz, _rqa=_rqa,
                                                               _cosen=_cosen, m=m, g=g)
+
             # individual features
             new_labels = []
             if needed_features is not None:
                 new_features, new_labels = extract_segment_some_hrv_features(segment, sf, needed_features, m=m, g=g)
                 extracted_features = np.hstack((extracted_features, new_features))
-            baseline_features.columns = new_labels
-            baseline_features.loc[i] = extracted_features  # add a line
+            features.columns = new_labels
+            features.loc[i] = extracted_features  # add a line
             t = segment_times[0] + ((segment_times[-1] - segment_times[0]) / 2)  # time in the middle of the segment
-            baseline_features = baseline_features.rename({i: t}, axis='index')
+            features = features.rename({i: t}, axis='index')
 
         if _save:
-            src.feature_extraction.io.__save_baseline_hrv_features(patient, state, baseline_features)
+            src.feature_extraction.io.__save_baseline_hrv_features(patient, state, features)
 
-        return baseline_features
+        return features
 
     # Extract baseline
-    if state is not None:
-       features_baseline= __extract_baseline_hrv_features(patient, state)
-       return features_baseline
-
-
-    elif isinstance(baseline, list) and len(baseline) > 0:  # extract features for a specific crisis of the given patient
-        features_baseline_set = {}
-        for states in state:
-            # check if it already exists
-            features_baseline = src.feature_extraction.io.__read_baseline_hrv_features(patient, state)
-            if features_baseline is not None:
-                if input("An HRV features HDF5 file for this patient's crisis " + str(state) + " was found with the features " + str(
-                        list(features_baseline.columns)) + ".\nDiscard and recompute? y/n").lower() == 'y':
-                    print("Recomputing...")
-                    features_baseline_set[state] = __extract_baseline_hrv_features(patient, state)
-                else:
-                    print("Returning the features founded.")
-                    features_baseline_set[state] = features_baseline
-            else:
-                features_baseline_set[state] = __extract_baseline_hrv_features(patient, state)
-        return features_baseline_set
-
-    elif isinstance(state, int):
-        # check if it already exists
-        features_baseline = src.feature_extraction.io.__read_baseline_hrv_features(patient, state)
-        if features_baseline is not None:
-            if input("An HRV features HDF5 file for this patient/crisis was found with the features " + str(list(features_baseline.columns)) + ".\nDiscard and recompute? y/n").lower() == 'y':
-                print("Recomputing...")
-                print("Features when extracting:",features_baseline)
-                return __extract_baseline_hrv_features(patient, state)
-            else:
-                print("Returning the features found.")
-                return features_baseline
-
-        else:
-            return __extract_baseline_hrv_features(patient, crises)
+    if baseline:
+        features_baseline = __extract_baseline_hrv_features(patient, state)
+        return features_baseline
 
     # Main segment
-    if crises is None and baseline == False:
+    if crises is None:
         if input("You are about to extract features from all crisis of patient " + str(
                 patient) + ". Are you sure? y/n").lower() == 'n':
             return
         # extract features for all crisis of the given patient
         crises = src.feature_extraction.io.__get_patient_crises_numbers(patient)
+        features_set = {}
+        for crisis in crises:
+            # check if it already exists
+            features = src.feature_extraction.io.__read_crisis_hrv_features(patient, crisis)
+            if features is not None:
+                if input("An HRV features HDF5 file for this patient's crisis " + str(
+                        crisis) + " was found with the features " + str(
+                    list(features.columns)) + ".\nDiscard and recompute? y/n").lower() == 'y':
+                    print("Recomputing...")
+                    features_set[crisis] = __extract_crisis_hrv_features(patient, crisis)
+                else:
+                    print("Returning the features founded.")
+                    features_set[crisis] = features
+
+        return features_set
+
+    elif isinstance(crises, list) and len(crises) > 0:  # extract features for a specific crisis of the given patient
         features_set = {}
         for crisis in crises:
             # check if it already exists
@@ -369,33 +364,18 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
                 else:
                     print("Returning the features founded.")
                     features_set[crisis] = features
-
-        return features_set
-
-    elif isinstance(crises, list) and len(crises) > 0 and baseline == False:  # extract features for a specific crisis of the given patient
-        features_set = {}
-        for crisis in crises:
-            # check if it already exists
-            features = src.feature_extraction.io.__read_crisis_hrv_features(patient, crisis)
-            if features is not None:
-                if input("An HRV features HDF5 file for this patient's crisis " + str(crisis) + " was found with the features " + str(
-                        list(features.columns)) + ".\nDiscard and recompute? y/n").lower() == 'y':
-                    print("Recomputing...")
-                    features_set[crisis] = __extract_crisis_hrv_features(patient, crisis)
-                else:
-                    print("Returning the features founded.")
-                    features_set[crisis] = features
             else:
                 features_set[crisis] = __extract_crisis_hrv_features(patient, crisis)
         return features_set
 
-    elif isinstance(crises, int) and baseline == False:
+    elif isinstance(crises, int):
         # check if it already exists
         features = src.feature_extraction.io.__read_crisis_hrv_features(patient, crises)
         if features is not None:
-            if input("An HRV features HDF5 file for this patient/crisis was found with the features " + str(list(features.columns)) + ".\nDiscard and recompute? y/n").lower() == 'y':
+            if input("An HRV features HDF5 file for this patient/crisis was found with the features " + str(
+                    list(features.columns)) + ".\nDiscard and recompute? y/n").lower() == 'y':
                 print("Recomputing...")
-                print("Features when extracting:",features)
+                print("Features when extracting:", features)
                 return __extract_crisis_hrv_features(patient, crises)
             else:
                 print("Returning the features found.")
@@ -409,12 +389,14 @@ def extract_patient_hrv_features(segment_time: int, patient: int, crises=None, s
                         "crisis extraction), or None to extract features of all crises of the patient.")
 
 
-
-def extract_hrv_features_all_patients(n_samples_segment: int, _save=True):
+def extract_hrv_features_all_patients(segment_time=15, segment_overlap_time=0, _save=True):
     """
     Extracts features of all crises of all patients.
-    :param n_samples_segment:
-    :param _save:
+
+    :param segment_time: Integer number of seconds for each segment.
+    :param segment_overlap_time: Integer number of seconds of overlap between segments.
+    :param _save: Pass as True to save the features in HDF files.
+
     :return: A dictionary with one element for each patient, identified by its number. Each element is another
     dictionary with one element for each crisis of that patient, identified by the crisis number. Each of these elements
     are a pd.Dataframe containing the extracted features in each column by segments in rows.
@@ -422,7 +404,8 @@ def extract_hrv_features_all_patients(n_samples_segment: int, _save=True):
     all_patient_numbers = src.feature_extraction.io.__get_patient_numbers()
     patients_set = {}
     for patient in all_patient_numbers:
-        patients_set[patient] = extract_patient_hrv_features(n_samples_segment, patient, None, _save=_save)
+        patients_set[patient] = extract_patient_hrv_features(patient, None, segment_time=segment_time,
+                                                             segment_overlap_time=segment_overlap_time, _save=_save)
 
     return patients_set
 
@@ -457,14 +440,16 @@ def get_patient_hrv_features(patient: int, crisis: int):
 
             print("Extracting features...")
             if features is not None:
-                features = np.hstack((features,extract_patient_hrv_features(int(segment_seconds), patient, crisis, segment_overlap_time=segment_overlap_time, m=m, g=g,
-                                                        needed_features=needed_features, _save=True)))
+                features = np.hstack((features,
+                                      extract_patient_hrv_features(patient, crisis, segment_time=int(segment_seconds),
+                                                                   segment_overlap_time=segment_overlap_time, m=m, g=g,
+                                                                   needed_features=needed_features, _save=True)))
             else:
-                features = extract_patient_hrv_features(int(segment_seconds), patient, crisis,
-                                                                             segment_overlap_time=segment_overlap_time,
-                                                                             m=m, g=g,
-                                                                             needed_features=needed_features,
-                                                                             _save=True)
+                features = extract_patient_hrv_features(patient, crisis, segment_time=int(segment_seconds),
+                                                        segment_overlap_time=segment_overlap_time,
+                                                        m=m, g=g,
+                                                        needed_features=needed_features,
+                                                        _save=True)
             print("Feature extraction saved.")
             print('featuresextract', features)
             return features
@@ -484,7 +469,7 @@ def get_patient_hrv_features(patient: int, crisis: int):
 
                 for feature in needed_features:
                     if feature in features.columns:
-                        features = features.drop(feature,axis=1)
+                        features = features.drop(feature, axis=1)
 
             m, g = None, None
 
@@ -495,8 +480,11 @@ def get_patient_hrv_features(patient: int, crisis: int):
                     break
 
             print("Extracting features...")
-            features = pd.concat([features,extract_patient_hrv_features(int(segment_seconds), patient, crisis, segment_overlap_time=segment_overlap_time, m=m, g=g,
-                                                    needed_features=needed_features, _save=True)],axis=1)
+            features = pd.concat([features, extract_patient_hrv_features(patient, crisis, segment_time=int(segment_seconds),
+                                                                         segment_overlap_time=segment_overlap_time, m=m,
+                                                                         g=g,
+                                                                         needed_features=needed_features, _save=True)],
+                                 axis=1)
 
             src.feature_extraction.io.__save_crisis_hrv_features(patient, crisis, features)
             print("Feature extraction saved.")
@@ -504,21 +492,21 @@ def get_patient_hrv_features(patient: int, crisis: int):
         else:
             return features
 
+
 def get_patient_hrv_baseline_features(patient: int, state: str):
     """
     Returns the features of the given patient-baseline pair.
     :param patient:  Integer number of the patient.
-    :param string: String of the state of the patient: awake/asleep.
+    :param state: String of the state of the patient: awake/asleep.
     :return:
     """
 
-    baseline_features = src.feature_extraction.io.__read_baseline_hrv_features(patient, state)
+    features = src.feature_extraction.io.__read_baseline_hrv_features(patient, state)
 
-    if baseline_features is None:  # HDF not found, compute the features
+    if features is None:  # HDF not found, compute the features
         if input(
-                "The HRV features for this patient/state pair were never computed before. Would you like to compute them now? y/n").lower() == 'y':
+                "The HRV features for this patient/crisis pair were never computed before. Would you like to compute them now? y/n").lower() == 'y':
             segment_seconds = input("Seconds per segment = ")
-            segment_overlap_time = int(input("Segment overlap = "))
             needed_features = input("Which features to compute (separated by spaces, or 'all') = ")
             if needed_features == 'all':
                 needed_features = None
@@ -534,13 +522,15 @@ def get_patient_hrv_baseline_features(patient: int, state: str):
                     break
 
             print("Extracting features...")
-            baseline_features = pd.concat([baseline_features, extract_patient_hrv_features(int(segment_seconds), patient, state=state,
-                                                                         segment_overlap_time=segment_overlap_time, m=m,
-                                                                         g=g,
-                                                                         needed_features=needed_features, _save=True)],axis=1)
+            features = pd.concat(
+                [features, extract_patient_hrv_features(patient, state=state, segment_time=int(segment_seconds),
+                                                        m=m, g=g, needed_features=needed_features, _save=True)], axis=1)
 
-            src.feature_extraction.io.__save_baseline_hrv_features(patient, state, baseline_features)
+            src.feature_extraction.io.__save_baseline_hrv_features(patient, state, features)
             print("Feature extraction saved.")
-            return baseline_features
+            return features
 
-    return baseline_features
+        else:
+            return None
+    else:
+        return features
