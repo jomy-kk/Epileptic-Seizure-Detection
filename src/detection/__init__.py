@@ -184,58 +184,59 @@ def train_test_svm (features, test_size):
 
         return grid_best_params
 
-    def stepwise_regression(x_train, y_train, x_test, labels):
-        repeat = True
-
-        while(repeat):
-            model = SMWrapper(sm.OLS)
-            results = model.fit(x_train, y_train)
-
-            pvals = results.pvalues[1:]
-
-            max_pval_i = np.argmax(pvals)
-
-            if pvals[max_pval_i] > 0.05:
-                 # Remove max p-value element for each example i
-                for i in range(len(x_train)):
-                    x_train[i].pop(max_pval_i)
-
-                for i in range(len(x_test)):
-                    x_test[i].pop(max_pval_i)
-
-                labels.pop(max_pval_i)
-
-            else:
-                repeat = False
-                print(results.summary())
-
-        return x_train, x_test, labels
-
-    x_train, x_test, labels = stepwise_regression(x_train, y_train, x_test, labels)
-
-    label_list = src.feature_extraction.io.__read_stepwise(patient)
-    if label_list is None:
-        label_list = []
-
-    label_list.append(labels)
-    src.feature_extraction.io.__save_stepwise(label_list, patient)
+    # def stepwise_regression(x_train, y_train, x_test, labels):
+    #     repeat = True
+    #
+    #     while(repeat):
+    #         model = SMWrapper(sm.OLS)
+    #         results = model.fit(x_train, y_train)
+    #
+    #         pvals = results.pvalues[1:]
+    #
+    #         max_pval_i = np.argmax(pvals)
+    #
+    #         if pvals[max_pval_i] > 0.05:
+    #              # Remove max p-value element for each example i
+    #             for i in range(len(x_train)):
+    #                 x_train[i].pop(max_pval_i)
+    #
+    #             for i in range(len(x_test)):
+    #                 x_test[i].pop(max_pval_i)
+    #
+    #             labels.pop(max_pval_i)
+    #
+    #         else:
+    #             repeat = False
+    #             print(results.summary())
+    #
+    #     return x_train, x_test, labels
+    #
+    # x_train, x_test, labels = stepwise_regression(x_train, y_train, x_test, labels)
+    #
+    # label_list = src.feature_extraction.io.__read_stepwise(patient)
+    # if label_list is None:
+    #     label_list = []
+    #
+    # label_list.append(labels)
+    # src.feature_extraction.io.__save_stepwise(label_list, patient)
 
     #After finding best features
-    # feature_label = ['sdnn', 'rmssd', 'mean', 'var', 'hr', 'lf', 'hf', 'lf_hf', 'csi', 'csv', 's', 'det', 'lmax']
-    #
-    # idx_to_remove = []
-    #
-    # for j in range(len(labels)):
-    #     if labels[j] not in feature_label:
-    #         idx_to_remove.append(j)
-    #
-    # for index in sorted(idx_to_remove, reverse=True):
-    #     for i in range(len(x_train)):
-    #         x_train[i].pop(index)
-    #     for i in range(len(x_test)):
-    #         x_test[i].pop(index)
-    #
-    # labels = feature_label
+    feature_label = ['sdnn', 'mean', 'var', 'hr', 'lf', 'hf', 'lf_hf', 'hf_lf', 'csi', 'csv', 'rec', 'det', 'sampen', 'cosen']
+    #'mean', 'var', 'hr', 'lf', 'hf', 'hf_lf', 'csi', 'csv', 's', 'rec', 'det', 'cosen'
+
+    idx_to_remove = []
+
+    for j in range(len(labels)):
+        if labels[j] not in feature_label:
+            idx_to_remove.append(j)
+
+    for index in sorted(idx_to_remove, reverse=True):
+        for i in range(len(x_train)):
+            x_train[i].pop(index)
+        for i in range(len(x_test)):
+            x_test[i].pop(index)
+
+    labels = feature_label
 
     # def rfe (x_train, y_train, x_test):
     #
@@ -278,20 +279,20 @@ def train_test_svm (features, test_size):
 
     #model implementation
 
-    model = SVC(kernel=parameters['kernel'], gamma=parameters['gamma'], C=parameters['C'],degree=parameters['degree'])
-    model = model.fit(x_train, y_train)
-    y_prediction = model.predict(x_test)
-    print("Y_predicted = ", y_prediction)
-
     def classification_report_with_f1_score(y_train, y_prediction):
-        print(classification_report(y_train, y_prediction)) # print classification report
+        print(classification_report(y_train, y_prediction))  # print classification report
         return f1_score(y_train, y_prediction)  # return accuracy score
 
+    model = SVC(kernel=parameters['kernel'], gamma=parameters['gamma'], C=parameters['C'],degree=parameters['degree'])
+    model = model.fit(x_train, y_train)
     cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-    n_scores = cross_val_score(model, x_test, y_test, scoring=make_scorer(classification_report_with_f1_score), cv=cv, n_jobs=-1, error_score='raise')
+    n_scores = cross_val_score(model, x_train, y_train, scoring=make_scorer(classification_report_with_f1_score), cv=cv,
+                               n_jobs=-1, error_score='raise')
     n_scores_mean = statistics.mean(n_scores)
     n_scores_stdev = statistics.stdev(n_scores)
     print('F1: %.3f (%.3f)' % (n_scores_mean, n_scores_stdev))
+    y_prediction = model.predict(x_test)
+    print("Y_predicted = ", y_prediction)
 
 
     # print classification report

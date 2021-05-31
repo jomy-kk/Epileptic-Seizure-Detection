@@ -36,7 +36,7 @@ def get_features_from_patients(patients: list, crises: list, state:str):
             #print('bas', get_patient_hrv_baseline_features(patient,state))
             features[crisis] = clean_outliers(get_patient_hrv_features(patient, crisis))
             baseline = get_patient_hrv_baseline_features(patient, state)
-            features[crisis] = normalise_feats_baseline(features[crisis], baseline)
+            features[crisis] = normalise_feats(features[crisis])
             #features[crisis] = correlation_feats(features[crisis], th=0.99)
 
             idx_to_drop = correlation_feats(features[crisis], th=0.99)
@@ -68,9 +68,29 @@ def get_baseline_from_patients(patients: list, state : str):
     res = dict()
     for patient in patients:
         features = dict()
-        for state in state:
-            features[state] = clean_outliers(get_patient_hrv_baseline_features(patient, state))
-            features[state] = normalise_feats(features[state])
+        toDrop = None
+        features = get_patient_hrv_baseline_features(patient, state)
+        idx_to_drop = correlation_feats(features, th=0.99)
+
+        # First crisis to be computed: get features that we want to drop and store them in toDrop
+        if toDrop is None:
+            toDrop = idx_to_drop
+            print('first', toDrop)
+
+        # Next crises: new set of crises to drop is in idx_to_drop.
+        # toDrop becomes the intersection of the previous set of features to drop and the new set.
+        else:
+            print('idx', idx_to_drop)
+            toDrop = [index for index in toDrop if index in idx_to_drop]
+            print('todrop', toDrop)
+
+        # At this point we have call the features that we want to drop in toDrop
+
+        print('Type: ', type(toDrop))
+        print('ToDrop: ', toDrop)
+        print(state, 'Before: ', features)
+        features = features.drop(columns=features.columns[toDrop])
+        print('After', features)
         res[patient] = features
     return res
 
@@ -171,8 +191,8 @@ class Table:
 
     #return baseline_awake
 
-patients = [102]
-crises = [1,3,4]
+patients = [101]
+crises = [1,2,3]
 state = "awake"
 features = get_features_from_patients(patients, crises, 'asleep')
 #baseline = get_full_baseline(patients)

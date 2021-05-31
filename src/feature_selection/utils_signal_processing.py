@@ -33,7 +33,7 @@ def normalise_feats(features, norm='minmax'):
         print(features)
         return (features - features.min()) / (features.max() - features.min())
 
-def normalise_feats_baseline(features, baseline, norm='minmax'):
+def normalise_feats_baseline(features, baseline, norm='stand'):
     if norm == 'stand':
         return (features - baseline.mean()) / (baseline.std())
 

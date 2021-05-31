@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 import pickle
+import os
 
 data_path = './data'
 
@@ -140,4 +141,36 @@ def __read_labels(patient:int):
 
         return labels
     except IOError:  # Parameters not found, return None
+        return None
+
+def __save_stepwise(features, patient:int):
+    try:
+        file_path = data_path + '/stepwise_' + str(patient) + '.json'
+        file = open(file_path, 'w')
+        json.dump(features, file)
+        print("Labels saved to " + file_path + " successfully.")
+    except IOError:
+        print("Cannot write labels to file. Save failed.")
+
+def __read_stepwise(patient:int):
+    try:  # try to read a previously computed JSON file with best parameters
+        file_path = data_path + '/stepwise_' + str(patient) + '.json'
+        file = open(file_path, 'r')
+        features = json.load(file)
+
+        print("Data from " + file_path + " was retrieved.")
+
+        return features
+    except IOError:  # Parameters not found, return None
+        return None
+
+def __delete_stepwise(patient:int):
+    try:
+        file_path = data_path + '/stepwise_' + str(patient) + '.json'
+        os.remove(file_path)
+        print("Data from " + file_path + " removed.")
+
+        return True
+    except IOError:  # Parameters not found, return None
+        print("No file found.")
         return None
