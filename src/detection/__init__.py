@@ -184,7 +184,7 @@ def train_test_svm (features, test_size):
 
         return grid_best_params
 
-    # def stepwise_regression(x_train, y_train, x_test, labels):
+    # def backward_elimination(x_train, y_train, x_test, labels):
     #     repeat = True
     #
     #     while(repeat):
@@ -211,14 +211,14 @@ def train_test_svm (features, test_size):
     #
     #     return x_train, x_test, labels
     #
-    # x_train, x_test, labels = stepwise_regression(x_train, y_train, x_test, labels)
+    # x_train, x_test, labels = backward_elimination(x_train, y_train, x_test, labels)
     #
-    # label_list = src.feature_extraction.io.__read_stepwise(patient)
+    # label_list = src.feature_extraction.io.__read_backward(patient)
     # if label_list is None:
     #     label_list = []
     #
     # label_list.append(labels)
-    # src.feature_extraction.io.__save_stepwise(label_list, patient)
+    # src.feature_extraction.io.__save_backward(label_list, patient)
 
     #After finding best features
     feature_label = ['sdnn', 'mean', 'var', 'hr', 'lf', 'hf', 'lf_hf', 'hf_lf', 'csi', 'csv', 'rec', 'det', 'sampen', 'cosen']
@@ -312,7 +312,7 @@ def train_test_svm_wrapper(features):
     run_size = int(input("How many runs do you want to perform on the dataset?"))
     test_size = float(input("What size do you want the test sample to have (0-1)?"))  #Using 0.2
     if input("Do you want to delete previous feature selection? y/n").lower() == 'y':
-        src.feature_extraction.io.__delete_stepwise(list(features.keys())[0])
+        src.feature_extraction.io.__delete_backward(list(features.keys())[0])
 
     f1_scores = []
 
@@ -330,8 +330,8 @@ def train_test_svm_wrapper(features):
         src.feature_extraction.io.__save_labels(labels, list(features.keys())[0])
 
 
-    if input("Read stepwise? y/n").lower() == 'y':
-        label_list = src.feature_extraction.io.__read_stepwise(list(features.keys())[0])
+    if input("Read backward? y/n").lower() == 'y':
+        label_list = src.feature_extraction.io.__read_backward(list(features.keys())[0])
         print(label_list)
 
 

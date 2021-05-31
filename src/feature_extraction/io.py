@@ -143,18 +143,18 @@ def __read_labels(patient:int):
     except IOError:  # Parameters not found, return None
         return None
 
-def __save_stepwise(features, patient:int):
+def __save_backward(features, patient:int):
     try:
-        file_path = data_path + '/stepwise_' + str(patient) + '.json'
+        file_path = data_path + '/backward_' + str(patient) + '.json'
         file = open(file_path, 'w')
         json.dump(features, file)
         print("Labels saved to " + file_path + " successfully.")
     except IOError:
         print("Cannot write labels to file. Save failed.")
 
-def __read_stepwise(patient:int):
+def __read_backward(patient:int):
     try:  # try to read a previously computed JSON file with best parameters
-        file_path = data_path + '/stepwise_' + str(patient) + '.json'
+        file_path = data_path + '/backward_' + str(patient) + '.json'
         file = open(file_path, 'r')
         features = json.load(file)
 
@@ -164,9 +164,9 @@ def __read_stepwise(patient:int):
     except IOError:  # Parameters not found, return None
         return None
 
-def __delete_stepwise(patient:int):
+def __delete_backward(patient:int):
     try:
-        file_path = data_path + '/stepwise_' + str(patient) + '.json'
+        file_path = data_path + '/backward_' + str(patient) + '.json'
         os.remove(file_path)
         print("Data from " + file_path + " removed.")
 
