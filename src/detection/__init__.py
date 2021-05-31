@@ -299,11 +299,13 @@ def train_test_svm (features, test_size):
     print(classification_report(y_test,y_prediction))
     cm = confusion_matrix(y_test, y_prediction, labels=[1,0])
     print('Confusion matrix : \n', cm)
+    f1=f1_score(y_test, y_prediction)
     tp, fn, fp, tn = confusion_matrix(y_test, y_prediction, labels=[1,0]).reshape(-1)
     print('Outcome values : \n', 'true positive:', tp, 'false negative:',fn, 'false positive:', fp, 'true negative:', tn)
     print('False positive rate:', fp/(fp+tn))
+    print('f1 score:', f1)
 
-    return model, n_scores_mean, labels
+    return model, f1, labels
 
 def train_test_svm_wrapper(features):
 
@@ -319,7 +321,7 @@ def train_test_svm_wrapper(features):
         f1_scores.append(f1_score)
 
     mean = statistics.mean(f1_scores)
-    st_dev = statistics.stdev(f1_scores) / math.sqrt(10)
+    st_dev = statistics.stdev(f1_scores)
     print("F1 scores: ", f1_scores)
     print("Mean: ", mean, "(", st_dev, ")")
 

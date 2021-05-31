@@ -88,16 +88,9 @@ def test_model (patient:int, crisis:int, state:str):
             y_prediction = model.predict(features[p][c].to_numpy().tolist())
             print("Y_predicted = ", y_prediction)
 
-            def classification_report_with_f1_score(dataset_x, dataset_y):
-                print(classification_report(dataset_x, dataset_y))  # print classification report
-                return f1_score(dataset_x, dataset_y)  # return accuracy score
+            f1=f1_score(dataset_x, dataset_y)  # return accuracy score
 
-            cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-            n_scores = cross_val_score(model, dataset_x, dataset_y, scoring=make_scorer(classification_report_with_f1_score),
-                                       cv=cv, n_jobs=-1, error_score='raise')
-            n_scores_mean = statistics.mean(n_scores)
-            n_scores_stdev = statistics.stdev(n_scores)
-            print('F1: %.3f (%.3f)' % (n_scores_mean, n_scores_stdev))
+            print('F1: %.3f (%.3f)' % (f1))
             # print classification report
             print(classification_report(dataset_y, y_prediction))
             cm = confusion_matrix(dataset_y, y_prediction, labels=[1, 0])
