@@ -7,7 +7,7 @@ from sklearn.metrics import classification_report, confusion_matrix, f1_score, m
 
 from src.feature_selection import get_features_from_patients, get_baseline_from_patients
 from src.feature_extraction import get_patient_hrv_features, get_patient_hrv_baseline_features
-from src.detection import train_test_svm_wrapper, create_dataset
+from src.svm import train_test_svm_wrapper, create_dataset
 import src.feature_extraction.io
 
 def decision_algorithm (patient:int, crisis:int, state:str):

@@ -10,9 +10,9 @@
 #
 ####################################
 
-from prediction.load_dataset import *
-from prediction.create_model import *
-from prediction.fit_evaluate import *
+from cnn.load_dataset import *
+from cnn.create_model import *
+from cnn.fit_evaluate import *
 
 
 # Load the dataset
